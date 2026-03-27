@@ -1,170 +1,135 @@
-# ALU_Health_care
+# 🏥 ALU Healthcare Dashboard
 
-Here is a complete, step-by-step setup guide for your ALU Healthcare project.
-
----
-
-## What You Need First
-
-Before anything else, make sure you have these installed on your computer:
-
-**1. A Code Editor — VS Code**
-Go to https://code.visualstudio.com, click Download, and install it like any normal program. This is where you will write and manage your code.
-
-**2. A Browser**
-Google Chrome or Microsoft Edge work best. You likely already have one.
+A full-featured campus health and academic management web application built for the African Leadership University. It includes student authentication, a health service request form, hydration and sports tracking, course management, grades, inbox, and a personal profile — all running entirely in the browser with no backend required.
 
 ---
 
-## Step 1 — Create Your Project Folder
+## 🌐 Live Demo
 
-1. Go to your Desktop (or anywhere you prefer)
-2. Right-click → **New Folder**
-3. Name it **ALU-Healthcare**
-
-This folder is your entire project. Everything lives here.
+> **https://github.com/christiantuyishime01/ALU_Health_care.git**
 
 ---
 
-## Step 2 — Put Your Files In The Folder
+## 📁 Project Files
 
-Take the two files you downloaded from this github folder:
-- `login.html`
-- `index.html`
-
-**Move or copy both of them into your ALU-Healthcare folder.**
-
-When you open the folder it should look exactly like this — nothing else, just these two files:
+Your repository must contain exactly these three files:
 
 ```
-ALU-Healthcare/
-├── login.html
-└── index.html
+alu-healthcare/
+├── index.html       ← Login & registration page (entry point)
+├── dashboard.html   ← Main application dashboard
+└── README.md        ← This file
 ```
 
 ---
 
-## Step 3 — Open The Folder in VS Code
+## ✨ Features
 
-1. Open **VS Code**
-2. Click **File** in the top menu
-3. Click **Open Folder**
-4. Find your **ALU-Healthcare** folder and click **Select Folder**
-
-You will now see both files listed in the left panel called the Explorer. This means VS Code is aware of your whole project, not just one file.
-
----
-
-## Step 4 — Install the Live Server Extension
-
-This is the most important step. You cannot just double-click the HTML files to open them — the login system uses browser storage that only works on a proper server, not a file path. Live Server creates that server for you instantly.
-
-1. In VS Code, look at the left sidebar and click the **Extensions icon** (it looks like 4 squares)
-2. In the search box at the top, type **Live Server**
-3. The first result should say **Live Server** by **Ritwick Dey**
-4. Click the blue **Install** button
-5. Wait for it to finish — it takes about 10 seconds
-
-You only ever need to do this once.
+- 🔐 **Authentication** — User registration and login with data stored in the browser
+- 👤 **User Profiles** — View and edit personal information saved from registration
+- 🏥 **Health Service Request** — 4-step form to request medical, mental health, physiotherapy, dental, and other campus services
+- 💧 **Hydration Tracker** — Log daily water intake with reminders
+- 🏃 **Sports & Activity Scheduler** — Check off daily fitness activities
+- 📚 **Courses** — View enrolled courses and progress
+- 📝 **Assignments** — Track upcoming and overdue work
+- 📅 **Calendar** — Monthly event overview
+- 📊 **Grades** — GPA and course grade summaries
+- 💬 **Discussions & Inbox** — Forum threads and messages
+- 📁 **Files** — Document management
+- 🌿 **Health Hub** — Wellness tracking with weekly summary
 
 ---
 
-## Step 5 — Launch the Project
+## 🔑 How to Log In
 
-1. In the VS Code Explorer panel on the left, **right-click on login.html**
-2. Select **"Open with Live Server"**
-3. Your browser will automatically open and you will see the ALU Healthcare login page
+When you open the live URL you will land on the login page. You have two options:
 
-The address in your browser will look like this:
-```
-http://127.0.0.1:5500/login.html
-```
-That address means the project is running correctly on your own computer.
+### Option A — Use a Demo Account (Fastest)
 
----
-
-## Step 6 — Create an Account and Log In
-
-You are now on the login page. You have two options:
-
-**Option A — Use a demo account (fastest)**
 Click any of the four demo buttons on the login page:
-- **Amara K.** — Student account
-- **James M.** — Trainer account
-- **Dr. Reeves** — Clinician account
-- **Admin** — Administrator account
 
-The email and password fill in automatically. Then click **Sign In**.
+| Button | Email | Password | Role |
+|--------|-------|----------|------|
+| Amara K. | student@alu.edu | demo1234 | Student |
+| James M. | trainer@alu.edu | demo1234 | Trainer |
+| Dr. Reeves | health@alu.edu | demo1234 | Clinician |
+| Admin | admin@alu.edu | demo1234 | Administrator |
 
-**Option B — Create your own account**
-1. Click the **Create Account** tab
-2. Fill in your first name, last name, email and password
-3. Select your role (Student, Trainer, or Clinician)
-4. Click **Create Account**
+The email and password fill in automatically — just click **Sign In**.
 
-Your account is saved permanently in your browser's storage. You will not lose it when you close the tab.
+### Option B — Create Your Own Account
 
----
+1. Click the **Create Account** tab on the login page
+2. Enter your **first name** and **last name**
+3. Enter your **email address** and a **password** (minimum 6 characters)
+4. Select your **role** — Student, Trainer, or Clinician
+5. Click **Create Account**
 
-## Step 7 — Explore the Dashboard
-
-After signing in you land on the main dashboard — `index.html`. From the left sidebar you can navigate to:
-
-| Section | What it does |
-|---|---|
-| Dashboard | Overview of your health and academic stats |
-| Courses | Your enrolled courses |
-| Assignments | Upcoming and overdue work |
-| Calendar | Monthly view of events |
-| Grades | GPA and course grades |
-| Discussions | Forum threads |
-| Inbox | Messages |
-| Files | Uploaded documents |
-| Health Hub | Water tracker and sports schedule |
-| **Health Request** | Submit a medical service request |
-| My Profile | View and edit your account info |
-| Sign Out | Logs you out and returns to login |
+Your account is saved permanently in the browser's local storage. It will still be there the next time you visit the site on the same device and browser.
 
 ---
 
-## Step 8 — Stopping and Restarting the Project
+## 🗺️ Navigating the Dashboard
 
-**To stop:** Go back to VS Code and click **Go Live** at the very bottom right of the screen — it toggles the server off.
+After logging in you will see the main dashboard. Use the left sidebar to navigate between sections:
 
-**To start again:** Right-click `login.html` in the Explorer and choose **Open with Live Server** again.
-
-**To close VS Code and come back later:** Just reopen VS Code, it will remember your folder. Then launch Live Server again from Step 5.
-
----
-
-## Troubleshooting — Common Problems
-
-**The browser opens but shows a blank page or an error**
-Make sure both `login.html` and `index.html` are in the same folder. If they are in different folders the redirect between them will not work.
-
-**I see "Cannot GET /index.html" in the browser**
-You opened a single file instead of the folder. Go to File → Open Folder and select the ALU-Healthcare folder, then launch Live Server again.
-
-**I registered but my account disappeared**
-This happens if you opened the files by double-clicking them instead of using Live Server. The storage only works at the `http://127.0.0.1` address. Always use Live Server.
-
-**Live Server is not showing in the right-click menu**
-The extension did not install properly. Go to Extensions, search Live Server, uninstall it, restart VS Code, and install it again.
-
-**The page opened but it immediately redirected me to login.html when I tried to open index.html directly**
-That is correct behaviour — the auth guard is working. You must always start from `login.html` and sign in first.
+| Section | Description |
+|---------|-------------|
+| ⊞ Dashboard | Overview with stats, upcoming assignments, announcements, and wellness cards |
+| 📚 Courses | All enrolled courses with progress bars |
+| 📝 Assignments | Upcoming, due soon, and overdue assignments |
+| 📅 Calendar | Monthly calendar with event indicators |
+| 📊 Grades | GPA tracker and course-by-course grades |
+| 💬 Discussions | Community forum threads |
+| 📥 Inbox | Messages from instructors and staff |
+| 📁 Files | Uploaded course documents |
+| 💪 Health Hub | Water tracker, sports schedule, and weekly wellness summary |
+| 🏥 Health Request | Submit a campus health service request |
+| 👤 My Profile | View and edit your account information |
+| 🚪 Sign Out | Log out and return to the login page |
 
 ---
 
-## Quick Reference Summary
+## 🏥 Using the Health Service Request
 
-| What | How |
-|---|---|
-| Start the project | Right-click `login.html` → Open with Live Server |
-| Demo login | Click any demo button on the login page |
-| Your custom account | Use the Create Account tab |
-| Where data is stored | Your browser's localStorage (stays after closing) |
-| Session (login state) | Your browser's sessionStorage (clears when tab closes) |
-| Stop the server | Click "Go Live" button at bottom of VS Code |
+The Health Service Request is a 4-step form to book a medical appointment on campus.
 
-That is the complete setup. Once Live Server is installed (Step 4), starting the project every time after that is just Steps 5 and 6.
+**Step 1 — Choose a Service Type**
+Select from 9 service categories including General Consultation, Mental Health, Physiotherapy, Nutrition, Dental, Eye Care, Vaccination, Lab Tests, and Urgent Care. Then set your priority level (Low, Medium, or High).
+
+**Step 2 — Enter Your Details**
+Fill in your name, student ID, email, phone, date of birth, symptoms, allergies, and current medications. Your name and email are pre-filled from your profile automatically.
+
+**Step 3 — Schedule Your Appointment**
+Pick a preferred date, choose between In-Person, Virtual, or Home Visit, and select an available time slot. Slots already taken by other students are shown in grey. You can also request a specific clinician.
+
+**Step 4 — Review and Submit**
+Check all your information before submitting. After submission you receive a unique reference code (e.g. `ALU-382910`) and the request is saved to your browser storage. You can view all your past requests by clicking **My Requests** tab.
+
+---
+
+## 💾 How Data is Stored
+
+This project runs entirely in the browser — there is no server or database in the cloud. Here is where each type of data is saved:
+
+| Data | Storage | When it clears |
+|------|---------|----------------|
+| Registered user accounts | `localStorage` | Never (stays until browser data is cleared) |
+| Health service requests | `localStorage` | Never (stays until browser data is cleared) |
+| Login session | `sessionStorage` | When the browser tab is closed |
+| Water and sports tracking | In memory | When the page is refreshed |
+
+> **Important:** Because data is stored in the browser, each person's data is private to their own device and browser. Data does not sync between devices.
+
+---
+
+
+## 🏫 About
+
+Built for the **African Leadership University (ALU)** Healthcare Division as a student wellness and academic management platform.
+
+
+
+## 📄 License
+
+This project is open source and free to use for educational purposes.
