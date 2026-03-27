@@ -28,7 +28,7 @@ This folder is your entire project. Everything lives here.
 
 ## Step 2 — Put Your Files In The Folder
 
-Take the two files you downloaded from this conversation:
+Take the two files you downloaded from this github folder:
 - `login.html`
 - `index.html`
 
