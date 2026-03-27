@@ -1,0 +1,3219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALU Healthcare</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1f2d45;
+    --accent: #f97316;
+    --accent2: #06b6d4;
+    --accent3: #a855f7;
+    --water: #38bdf8;
+    --sports: #4ade80;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --danger: #f43f5e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 62px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+  }
+
+  .logo-badge {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: white;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .health-pills {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+
+  .pill-water {
+    border-color: var(--water);
+    color: var(--water);
+    background: rgba(56,189,248,0.08);
+  }
+
+  .pill-water:hover { background: rgba(56,189,248,0.18); }
+
+  .pill-sports {
+    border-color: var(--sports);
+    color: var(--sports);
+    background: rgba(74,222,128,0.08);
+  }
+
+  .pill-sports:hover { background: rgba(74,222,128,0.18); }
+
+  .pill-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    animation: pulse-dot 2s infinite;
+  }
+
+  .pill-water .pill-dot { background: var(--water); }
+  .pill-sports .pill-dot { background: var(--sports); }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent3), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: flex;
+    margin-top: 62px;
+    min-height: calc(100vh - 62px);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 1.5rem 0;
+    position: fixed;
+    top: 62px; bottom: 0;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+
+  .nav-section-title {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    padding: 0.5rem 1.2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0.6rem 1.2rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 0.88rem;
+    color: var(--muted);
+    border-left: 3px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+
+  .nav-item.active {
+    color: var(--accent);
+    background: rgba(249,115,22,0.08);
+    border-left-color: var(--accent);
+  }
+
+  .nav-icon { font-size: 1.1rem; width: 20px; text-align: center; }
+
+  /* MAIN */
+  .main {
+    margin-left: 220px;
+    flex: 1;
+    padding: 2rem;
+  }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* GREETING HEADER */
+  .greeting {
+    margin-bottom: 2rem;
+  }
+
+  .greeting h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .greeting h1 span { color: var(--accent); }
+
+  .greeting p { color: var(--muted); margin-top: 0.4rem; font-size: 0.9rem; }
+
+  /* STAT CARDS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+    transition: border-color 0.2s;
+  }
+
+  .stat-card:hover { border-color: var(--accent); }
+
+  .stat-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.8px; }
+
+  .stat-value {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* GRID LAYOUTS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .three-col { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .card-action {
+    font-size: 0.78rem;
+    color: var(--accent);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .card-body { padding: 1rem 1.2rem; }
+
+  /* ASSIGNMENTS */
+  .assignment-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .assignment-item:last-child { border-bottom: none; }
+
+  .assignment-item:hover { margin: 0 -1.2rem; padding-left: 1.2rem; padding-right: 1.2rem; background: rgba(255,255,255,0.03); }
+
+  .asgn-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .asgn-info { flex: 1; }
+  .asgn-title { font-size: 0.88rem; font-weight: 500; }
+  .asgn-course { font-size: 0.75rem; color: var(--muted); }
+
+  .asgn-due {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .due-soon { background: rgba(249,115,22,0.15); color: var(--accent); }
+  .due-ok { background: rgba(6,182,212,0.12); color: var(--accent2); }
+  .due-late { background: rgba(244,63,94,0.12); color: var(--danger); }
+
+  /* COURSES */
+  .course-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, border-color 0.2s;
+  }
+
+  .course-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+
+  .course-banner {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .course-info { padding: 0.8rem; }
+  .course-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; }
+  .course-instructor { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+
+  .course-progress { margin-top: 0.6rem; }
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), #fb923c);
+  }
+
+  .courses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  /* CALENDAR */
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  .cal-day-header {
+    font-size: 0.65rem;
+    text-align: center;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 0;
+  }
+
+  .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    position: relative;
+  }
+
+  .cal-day:hover { background: var(--border); }
+  .cal-day.today { background: var(--accent); color: white; font-weight: 700; }
+  .cal-day.has-event::after {
+    content: '';
+    width: 4px; height: 4px;
+    background: var(--accent2);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 3px;
+  }
+
+  .cal-day.other-month { color: var(--muted); }
+
+  /* GRADES */
+  .grade-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .grade-row:last-child { border-bottom: none; }
+
+  .grade-label { font-size: 0.88rem; }
+  .grade-sub { font-size: 0.73rem; color: var(--muted); }
+
+  .grade-badge {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  .grade-a { color: var(--sports); }
+  .grade-b { color: var(--accent2); }
+  .grade-c { color: var(--accent); }
+
+  /* DISCUSSION */
+  .discussion-item {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .discussion-item:last-child { border-bottom: none; }
+  .disc-title { font-size: 0.88rem; font-weight: 500; }
+  .disc-meta { font-size: 0.73rem; color: var(--muted); margin-top: 3px; }
+  .disc-preview { font-size: 0.8rem; color: #94a3b8; margin-top: 5px; line-height: 1.4; }
+
+  /* ANNOUNCEMENTS */
+  .announcement {
+    padding: 0.8rem;
+    background: var(--surface2);
+    border-radius: 10px;
+    border-left: 3px solid var(--accent2);
+    margin-bottom: 0.8rem;
+  }
+
+  .ann-title { font-size: 0.88rem; font-weight: 500; }
+  .ann-course { font-size: 0.72rem; color: var(--accent2); margin-bottom: 4px; }
+  .ann-text { font-size: 0.8rem; color: #94a3b8; line-height: 1.45; }
+  .ann-time { font-size: 0.7rem; color: var(--muted); margin-top: 5px; }
+
+  /* HEALTH SECTION */
+  .health-section {
+    margin-top: 2rem;
+  }
+
+  .health-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .health-card {
+    border-radius: 18px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .health-card-water {
+    background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(56,189,248,0.08));
+    border: 1px solid rgba(56,189,248,0.3);
+  }
+
+  .health-card-sports {
+    background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(74,222,128,0.08));
+    border: 1px solid rgba(74,222,128,0.3);
+  }
+
+  .health-card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .health-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .health-card-water .health-card-title { color: var(--water); }
+  .health-card-sports .health-card-title { color: var(--sports); }
+
+  .health-card p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem; }
+
+  .health-timer {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0.5rem 0;
+  }
+
+  .health-card-water .health-timer { color: var(--water); }
+  .health-card-sports .health-timer { color: var(--sports); }
+
+  .health-sub { font-size: 0.78rem; color: var(--muted); }
+
+  .btn-health {
+    padding: 8px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.83rem;
+    margin-top: 1rem;
+    transition: all 0.2s;
+  }
+
+  .btn-water {
+    background: var(--water);
+    color: var(--bg);
+  }
+
+  .btn-water:hover { background: #7dd3fc; }
+
+  .btn-sports {
+    background: var(--sports);
+    color: var(--bg);
+  }
+
+  .btn-sports:hover { background: #86efac; }
+
+  .water-progress {
+    display: flex;
+    gap: 6px;
+    margin: 0.8rem 0 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .water-cup {
+    width: 28px; height: 34px;
+    border-radius: 4px;
+    border: 2px solid rgba(56,189,248,0.4);
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .water-cup:hover { border-color: var(--water); }
+
+  .water-cup.filled { border-color: var(--water); background: rgba(56,189,248,0.15); }
+
+  .water-cup-fill {
+    width: 100%;
+    background: linear-gradient(to top, var(--water), rgba(56,189,248,0.5));
+    transition: height 0.3s;
+  }
+
+  .sports-schedule {
+    margin-top: 0.8rem;
+  }
+
+  .sport-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(74,222,128,0.15);
+    font-size: 0.83rem;
+  }
+
+  .sport-item:last-child { border-bottom: none; }
+  .sport-time { color: var(--sports); font-weight: 600; min-width: 55px; font-size: 0.78rem; }
+  .sport-check {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid rgba(74,222,128,0.4);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .sport-check.done { background: var(--sports); border-color: var(--sports); color: var(--bg); }
+
+  /* NOTIFICATION TOAST */
+  .toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .toast {
+    min-width: 280px;
+    max-width: 340px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    backdrop-filter: blur(12px);
+    animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  .toast-water {
+    background: rgba(14,30,50,0.95);
+    border: 1px solid rgba(56,189,248,0.4);
+  }
+
+  .toast-sports {
+    background: rgba(10,30,20,0.95);
+    border: 1px solid rgba(74,222,128,0.4);
+  }
+
+  .toast-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .toast-content { flex: 1; }
+  .toast-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 0.9rem; margin-bottom: 2px; }
+  .toast-water .toast-title { color: var(--water); }
+  .toast-sports .toast-title { color: var(--sports); }
+  .toast-body { font-size: 0.8rem; color: #94a3b8; }
+  .toast-dismiss { cursor: pointer; color: var(--muted); font-size: 1rem; line-height: 1; padding: 2px; }
+
+  @keyframes slideIn {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+
+  @keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+  }
+
+  /* INBOX */
+  .message-item {
+    display: flex;
+    gap: 12px;
+    padding: 0.8rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .message-item:hover { background: rgba(255,255,255,0.03); }
+  .message-item.unread { background: rgba(249,115,22,0.05); }
+
+  .msg-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .msg-info { flex: 1; }
+  .msg-from { font-size: 0.88rem; font-weight: 500; display: flex; justify-content: space-between; }
+  .msg-subject { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+  .msg-time { font-size: 0.72rem; color: var(--muted); }
+  .msg-unread-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; margin-top: 6px; flex-shrink: 0; }
+
+  /* FILES */
+  .file-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+
+  .file-item:last-child { border-bottom: none; }
+  .file-icon { font-size: 1.5rem; }
+  .file-name { font-size: 0.87rem; font-weight: 500; }
+  .file-meta { font-size: 0.73rem; color: var(--muted); }
+  .file-size { font-size: 0.75rem; color: var(--muted); margin-left: auto; }
+
+  /* SCROLL */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 99px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .badge-orange { background: rgba(249,115,22,0.15); color: var(--accent); }
+  .badge-cyan { background: rgba(6,182,212,0.12); color: var(--accent2); }
+  .badge-purple { background: rgba(168,85,247,0.12); color: var(--accent3); }
+  .badge-green { background: rgba(74,222,128,0.12); color: var(--sports); }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  /* === PROFILE PAGE === */
+  .profile-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  .profile-avatar-big {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0 0 4px var(--surface), 0 0 0 6px var(--border);
+  }
+
+  .profile-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .profile-role-badge {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    background: rgba(249,115,22,0.15);
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .profile-email-display {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .profile-joined {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+  }
+
+  .profile-streaks {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.9rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .streak-item { text-align: center; }
+  .streak-val { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--accent2); }
+  .streak-label { font-size: 0.7rem; color: var(--muted); margin-top: 2px; }
+  .streak-divider { width: 1px; height: 36px; background: var(--border); }
+
+  .btn-profile-action {
+    width: 100%;
+    padding: 10px;
+    background: rgba(249,115,22,0.12);
+    border: 1px solid rgba(249,115,22,0.3);
+    border-radius: 10px;
+    color: var(--accent);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-profile-action:hover { background: rgba(249,115,22,0.2); }
+
+  .btn-profile-danger {
+    width: 100%;
+    padding: 10px;
+    background: rgba(244,63,94,0.08);
+    border: 1px solid rgba(244,63,94,0.2);
+    border-radius: 10px;
+    color: var(--danger);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-profile-danger:hover { background: rgba(244,63,94,0.16); }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .info-item {}
+  .info-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin-bottom: 4px; }
+  .info-value { font-size: 0.9rem; font-weight: 500; color: var(--text); }
+
+  /* Edit form inputs */
+  .form-label-sm {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    margin-bottom: 5px;
+    font-weight: 500;
+  }
+
+  .form-input-sm {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input-sm:focus { border-color: var(--accent); }
+
+  .btn-save {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.35); }
+
+  .btn-cancel-edit {
+    padding: 10px 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-cancel-edit:hover { color: var(--text); border-color: #334155; }
+
+  .save-alert {
+    margin-top: 0.8rem;
+    font-size: 0.82rem;
+    min-height: 20px;
+  }
+
+  /* ============================================================
+     HEALTH SERVICE REQUEST PAGE
+  ============================================================ */
+  .hsr-layout {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  /* Step progress bar */
+  .hsr-steps {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 0;
+  }
+
+  .hsr-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    position: relative;
+    cursor: default;
+  }
+
+  .hsr-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--border);
+    z-index: 0;
+    transition: background 0.4s;
+  }
+
+  .hsr-step.completed:not(:last-child)::after { background: var(--accent); }
+
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted);
+    z-index: 1;
+    transition: all 0.3s;
+    font-family: 'Syne', sans-serif;
+  }
+
+  .hsr-step.active .step-circle {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.15);
+    color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(249,115,22,0.12);
+  }
+
+  .hsr-step.completed .step-circle {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: white;
+  }
+
+  .step-label {
+    font-size: 0.68rem;
+    color: var(--muted);
+    margin-top: 6px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .hsr-step.active .step-label { color: var(--accent); font-weight: 600; }
+  .hsr-step.completed .step-label { color: var(--text); }
+
+  /* Form step panels */
+  .hsr-step-panel { display: none; }
+  .hsr-step-panel.active { display: block; animation: step-in 0.35s ease; }
+
+  @keyframes step-in {
+    from { opacity: 0; transform: translateX(18px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* Service type cards */
+  .service-types {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.4rem;
+  }
+
+  .service-type-card {
+    padding: 1rem;
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .service-type-card:hover { border-color: #334155; transform: translateY(-2px); }
+
+  .service-type-card.selected {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.08);
+  }
+
+  .stc-emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  .stc-name { font-size: 0.82rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .stc-desc { font-size: 0.7rem; color: var(--muted); line-height: 1.3; }
+
+  /* Priority selector */
+  .priority-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 6px;
+  }
+
+  .priority-opt {
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: var(--muted);
+  }
+
+  .priority-opt:hover { border-color: #334155; }
+
+  .priority-opt.sel-low.selected    { border-color: var(--sports); background: rgba(74,222,128,0.1); color: var(--sports); }
+  .priority-opt.sel-medium.selected { border-color: var(--accent); background: rgba(249,115,22,0.1); color: var(--accent); }
+  .priority-opt.sel-high.selected   { border-color: var(--danger); background: rgba(244,63,94,0.1);  color: var(--danger); }
+
+  /* Slot picker */
+  .slot-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .slot-btn {
+    padding: 9px 6px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 9px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #94a3b8;
+    transition: all 0.2s;
+  }
+
+  .slot-btn:hover:not(.taken) { border-color: var(--accent2); color: var(--accent2); }
+
+  .slot-btn.selected {
+    border-color: var(--accent2);
+    background: rgba(6,182,212,0.12);
+    color: var(--accent2);
+    font-weight: 700;
+  }
+
+  .slot-btn.taken {
+    opacity: 0.35;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
+
+  /* Form inputs reused */
+  .hsr-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+    margin-top: 6px;
+  }
+
+  .hsr-input:focus { border-color: var(--accent); }
+  .hsr-input.invalid { border-color: var(--danger); }
+
+  .hsr-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #94a3b8;
+    font-weight: 500;
+    display: block;
+    margin-top: 1rem;
+    margin-bottom: 2px;
+  }
+
+  .hsr-hint { font-size: 0.72rem; color: var(--muted); margin-top: 4px; }
+
+  .hsr-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* Navigation buttons */
+  .hsr-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 1.6rem;
+    align-items: center;
+  }
+
+  .btn-hsr-next {
+    padding: 11px 28px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-hsr-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.35); }
+
+  .btn-hsr-back {
+    padding: 11px 20px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-hsr-back:hover { color: var(--text); border-color: #334155; }
+
+  /* Review panel */
+  .review-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+  }
+
+  .review-item:last-child { border-bottom: none; }
+  .review-key { color: var(--muted); font-size: 0.78rem; flex-shrink: 0; margin-right: 1rem; }
+  .review-val { color: var(--text); font-weight: 500; text-align: right; }
+
+  /* Sidebar summary card */
+  .hsr-summary-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    position: sticky;
+    top: 80px;
+  }
+
+  .hsr-summary-header {
+    padding: 1rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.92rem;
+  }
+
+  .hsr-summary-body { padding: 1rem 1.2rem; }
+
+  .hsr-summary-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 0.55rem 0;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .hsr-summary-row:last-child { border-bottom: none; }
+  .hsr-sum-icon { font-size: 1rem; flex-shrink: 0; width: 20px; }
+  .hsr-sum-key { color: var(--muted); font-size: 0.72rem; }
+  .hsr-sum-val { color: var(--text); font-weight: 500; font-size: 0.82rem; }
+
+  /* Requests history table */
+  .request-history-table { width: 100%; border-collapse: collapse; }
+
+  .request-history-table th {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--muted);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .request-history-table td {
+    padding: 0.75rem 0.8rem;
+    font-size: 0.83rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .request-history-table tr:last-child td { border-bottom: none; }
+  .request-history-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .req-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .req-status-pending   { background: rgba(249,115,22,0.15); color: var(--accent); }
+  .req-status-confirmed { background: rgba(6,182,212,0.12);  color: var(--accent2); }
+  .req-status-completed { background: rgba(74,222,128,0.12); color: var(--sports); }
+  .req-status-cancelled { background: rgba(244,63,94,0.12);  color: var(--danger); }
+
+  /* Success screen */
+  .hsr-success {
+    display: none;
+    text-align: center;
+    padding: 3rem 2rem;
+    animation: step-in 0.5s ease;
+  }
+
+  .hsr-success.show { display: block; }
+
+  .success-ring {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(74,222,128,0.12);
+    border: 2px solid var(--sports);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.4rem;
+    animation: pop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) 0.1s both;
+  }
+
+  @keyframes pop-in {
+    from { transform: scale(0.4); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .hsr-success h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+
+  .hsr-success p { color: var(--muted); font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.6rem; }
+
+  .hsr-ref {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: monospace;
+    font-size: 1rem;
+    color: var(--accent2);
+    letter-spacing: 1px;
+    margin-bottom: 1.6rem;
+  }
+
+  .btn-new-request {
+    padding: 11px 24px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    margin-right: 8px;
+    transition: all 0.2s;
+  }
+
+  .btn-new-request:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(249,115,22,0.35); }
+
+  .btn-view-history {
+    padding: 11px 20px;
+    background: var(--surface2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-view-history:hover { color: var(--text); border-color: #334155; }
+
+  /* Field validation error */
+  .field-error {
+    font-size: 0.72rem;
+    color: var(--danger);
+    margin-top: 3px;
+    display: none;
+  }
+
+  .field-error.show { display: block; }
+</style>
+</head>
+<body>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-badge">ALU</div>
+    Healthcare
+  </div>
+  <div class="topbar-actions">
+    <div class="health-pills">
+      <div class="pill pill-water" onclick="showWaterToast()">
+        <span class="pill-dot"></span>
+        💧 Water
+      </div>
+      <div class="pill pill-sports" onclick="showSportsToast()">
+        <span class="pill-dot"></span>
+        🏃 Sports
+      </div>
+    </div>
+    <div class="avatar" id="userAvatar" style="cursor:pointer" title="Click to sign out" onclick="if(confirm('Sign out of ALU Healthcare?')) logout()">AM</div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="nav-section-title">Main</div>
+    <div class="nav-item active" onclick="navigate('dashboard', this)"><span class="nav-icon">⊞</span> Dashboard</div>
+    <div class="nav-item" onclick="navigate('courses', this)"><span class="nav-icon">📚</span> Courses</div>
+    <div class="nav-item" onclick="navigate('assignments', this)"><span class="nav-icon">📝</span> Assignments</div>
+    <div class="nav-item" onclick="navigate('calendar', this)"><span class="nav-icon">📅</span> Calendar</div>
+    <div class="nav-item" onclick="navigate('grades', this)"><span class="nav-icon">📊</span> Grades</div>
+
+    <div class="nav-section-title" style="margin-top:1rem;">Community</div>
+    <div class="nav-item" onclick="navigate('discussions', this)"><span class="nav-icon">💬</span> Discussions</div>
+    <div class="nav-item" onclick="navigate('inbox', this)"><span class="nav-icon">📥</span> Inbox</div>
+    <div class="nav-item" onclick="navigate('files', this)"><span class="nav-icon">📁</span> Files</div>
+
+    <div class="nav-section-title" style="margin-top:1rem;">Wellness</div>
+    <div class="nav-item" onclick="navigate('health', this)"><span class="nav-icon">💪</span> Health Hub</div>
+    <div class="nav-item" onclick="navigate('healthrequest', this)"><span class="nav-icon">🏥</span> Health Request</div>
+
+    <div class="nav-section-title" style="margin-top:1rem;">Account</div>
+    <div class="nav-item" onclick="navigate('profile', this)"><span class="nav-icon">👤</span> My Profile</div>
+    <div class="nav-item" onclick="if(confirm('Sign out of ALU Healthcare?')) logout()" style="color:var(--danger);margin-top:0.25rem"><span class="nav-icon">🚪</span> Sign Out</div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="greeting">
+        <h1>Good morning, <span>Christian 👋</span></h1>
+        <p>Wednesday, March 4, 2026 — You have 3 assignments due this week</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">GPA</div>
+          <div class="stat-value" style="color:var(--sports)">3.8</div>
+          <div class="stat-sub">↑ from last semester</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Courses</div>
+          <div class="stat-value" style="color:var(--accent2)">6</div>
+          <div class="stat-sub">Spring 2026</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Due Soon</div>
+          <div class="stat-value" style="color:var(--accent)">3</div>
+          <div class="stat-sub">Next 7 days</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completion</div>
+          <div class="stat-value" style="color:var(--accent3)">78%</div>
+          <div class="stat-sub">All tasks</div>
+        </div>
+      </div>
+
+      <div class="three-col">
+        <!-- Upcoming Assignments -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Upcoming Assignments</div>
+            <a class="card-action" onclick="navigate('assignments', document.querySelectorAll('.nav-item')[2])">View all →</a>
+          </div>
+          <div class="card-body">
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(249,115,22,0.12)">📄</div>
+              <div class="asgn-info">
+                <div class="asgn-title">Business Ethics Case Study</div>
+                <div class="asgn-course">BUSA 201</div>
+              </div>
+              <span class="asgn-due due-soon">Tomorrow</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(168,85,247,0.12)">💻</div>
+              <div class="asgn-info">
+                <div class="asgn-title">Data Structures Project</div>
+                <div class="asgn-course">CS 301</div>
+              </div>
+              <span class="asgn-due due-ok">Mar 8</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(6,182,212,0.12)">📊</div>
+              <div class="asgn-info">
+                <div class="asgn-title">Market Analysis Report</div>
+                <div class="asgn-course">ECON 204</div>
+              </div>
+              <span class="asgn-due due-ok">Mar 10</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(244,63,94,0.12)">🔬</div>
+              <div class="asgn-info">
+                <div class="asgn-title">Lab Report #4</div>
+                <div class="asgn-course">SCI 102</div>
+              </div>
+              <span class="asgn-due due-late">Overdue</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">Announcements</div>
+            </div>
+            <div class="card-body">
+              <div class="announcement">
+                <div class="ann-course">CS 301 · Prof. Kagabo</div>
+                <div class="ann-title">Office Hours Changed</div>
+                <div class="ann-text">Office hours moved to Thursdays 3–5 PM this week due to faculty meeting.</div>
+                <div class="ann-time">2 hours ago</div>
+              </div>
+              <div class="announcement" style="border-left-color:var(--accent3)">
+                <div class="ann-course" style="color:var(--accent3)">BUSA 201 · Dr. Mukasa</div>
+                <div class="ann-title">Guest Speaker Next Week</div>
+                <div class="ann-text">We'll have a guest entrepreneur speaking on African startup ecosystems.</div>
+                <div class="ann-time">Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Health Reminders Quick View -->
+      <div class="health-section">
+        <div class="section-title">🌿 Today's Wellness</div>
+        <div class="health-cards">
+          <!-- Water -->
+          <div class="health-card health-card-water">
+            <div class="health-card-icon">💧</div>
+            <div class="health-card-title">Hydration Tracker</div>
+            <p>Stay hydrated! Aim for 8 glasses per day to keep your mind sharp during study sessions.</p>
+            <div class="water-progress" id="waterCups"></div>
+            <div class="health-sub" id="waterCount">0 / 8 glasses today</div>
+            <button class="btn-health btn-water" onclick="logWater()">+ Log a Glass</button>
+          </div>
+
+          <!-- Sports -->
+          <div class="health-card health-card-sports">
+            <div class="health-card-icon">🏃</div>
+            <div class="health-card-title">Sports & Activity</div>
+            <p>Regular exercise boosts memory, focus, and mood. Check off today's activities!</p>
+            <div class="sports-schedule" id="sportsSchedule"></div>
+            <button class="btn-health btn-sports" onclick="navigate('health', document.querySelectorAll('.nav-item')[8])">Open Health Hub</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COURSES -->
+    <div class="page" id="page-courses">
+      <div class="greeting">
+        <h1>My <span>Courses</span></h1>
+        <p>Spring 2026 — 6 active courses</p>
+      </div>
+      <div class="courses-grid">
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#1e3a5f,#0f2744)">💻</div>
+          <div class="course-info">
+            <div class="course-name">Data Structures & Algorithms</div>
+            <div class="course-instructor">Prof. Jean Kagabo</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>68%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:68%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#3b1f5e,#1a0d2e)">📈</div>
+          <div class="course-info">
+            <div class="course-name">Business Ethics & Leadership</div>
+            <div class="course-instructor">Dr. Alice Mukasa</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>82%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:82%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#0f3d2e,#072219)">🌍</div>
+          <div class="course-info">
+            <div class="course-name">African Economic History</div>
+            <div class="course-instructor">Prof. Chidi Okafor</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>55%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:55%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#3d1a00,#1f0d00)">🔬</div>
+          <div class="course-info">
+            <div class="course-name">Introduction to Sciences</div>
+            <div class="course-instructor">Dr. Miriam Wanjiru</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>40%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#0a2940,#051520)">📊</div>
+          <div class="course-info">
+            <div class="course-name">Macroeconomics</div>
+            <div class="course-instructor">Prof. Aisha Diallo</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>74%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:74%"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="course-card">
+          <div class="course-banner" style="background:linear-gradient(135deg,#2d1a4a,#150d22)">🎨</div>
+          <div class="course-info">
+            <div class="course-name">Design Thinking</div>
+            <div class="course-instructor">Instructor: Noa Bekele</div>
+            <div class="course-progress">
+              <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:var(--muted);margin-bottom:4px"><span>Progress</span><span>90%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:90%;background:linear-gradient(90deg,var(--accent3),#c084fc)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSIGNMENTS -->
+    <div class="page" id="page-assignments">
+      <div class="greeting">
+        <h1>All <span>Assignments</span></h1>
+        <p>Spring 2026 — Filtered by upcoming</p>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Assignments</div>
+          <div style="display:flex;gap:8px">
+            <span class="badge badge-orange">3 Due Soon</span>
+            <span class="badge badge-cyan">4 Upcoming</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(249,115,22,0.12)">📄</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Business Ethics Case Study</div>
+              <div class="asgn-course">BUSA 201 — 100 pts</div>
+            </div>
+            <span class="asgn-due due-soon">Tomorrow</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(168,85,247,0.12)">💻</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Data Structures Project — Binary Trees</div>
+              <div class="asgn-course">CS 301 — 200 pts</div>
+            </div>
+            <span class="asgn-due due-ok">Mar 8</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(6,182,212,0.12)">📊</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Market Analysis Report — Rwanda</div>
+              <div class="asgn-course">ECON 204 — 150 pts</div>
+            </div>
+            <span class="asgn-due due-ok">Mar 10</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(244,63,94,0.12)">🔬</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Lab Report #4 — Cell Biology</div>
+              <div class="asgn-course">SCI 102 — 80 pts</div>
+            </div>
+            <span class="asgn-due due-late">Overdue</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(74,222,128,0.1)">🎨</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Design Prototype — Final Sprint</div>
+              <div class="asgn-course">DT 401 — 250 pts</div>
+            </div>
+            <span class="asgn-due due-ok">Mar 15</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(249,115,22,0.12)">🌍</div>
+            <div class="asgn-info">
+              <div class="asgn-title">Colonial Era Essay</div>
+              <div class="asgn-course">HIST 205 — 120 pts</div>
+            </div>
+            <span class="asgn-due due-ok">Mar 18</span>
+          </div>
+          <div class="assignment-item">
+            <div class="asgn-icon" style="background:rgba(168,85,247,0.12)">📈</div>
+            <div class="asgn-info">
+              <div class="asgn-title">GDP Forecasting Model</div>
+              <div class="asgn-course">ECON 204 — 180 pts</div>
+            </div>
+            <span class="asgn-due due-ok">Mar 22</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="page" id="page-calendar">
+      <div class="greeting">
+        <h1>Academic <span>Calendar</span></h1>
+        <p>March 2026</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">← March 2026 →</div>
+          </div>
+          <div class="card-body">
+            <div class="calendar-grid" id="calendarGrid"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Upcoming Events</div></div>
+          <div class="card-body">
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(249,115,22,0.12)">📝</div>
+              <div class="asgn-info"><div class="asgn-title">Business Ethics Due</div><div class="asgn-course">BUSA 201</div></div>
+              <span class="asgn-due due-soon">Mar 5</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(74,222,128,0.1)">🏃</div>
+              <div class="asgn-info"><div class="asgn-title">Sports Day — Soccer</div><div class="asgn-course">ALU Athletics</div></div>
+              <span class="asgn-due due-ok">Mar 7</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(168,85,247,0.12)">💻</div>
+              <div class="asgn-info"><div class="asgn-title">CS 301 Project Due</div><div class="asgn-course">Data Structures</div></div>
+              <span class="asgn-due due-ok">Mar 8</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(6,182,212,0.12)">🎤</div>
+              <div class="asgn-info"><div class="asgn-title">Guest Speaker: Startups</div><div class="asgn-course">BUSA 201</div></div>
+              <span class="asgn-due due-ok">Mar 11</span>
+            </div>
+            <div class="assignment-item">
+              <div class="asgn-icon" style="background:rgba(74,222,128,0.1)">🏊</div>
+              <div class="asgn-info"><div class="asgn-title">Swimming Competition</div><div class="asgn-course">ALU Athletics</div></div>
+              <span class="asgn-due due-ok">Mar 14</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRADES -->
+    <div class="page" id="page-grades">
+      <div class="greeting">
+        <h1>My <span>Grades</span></h1>
+        <p>Spring 2026 — GPA: 3.8</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Course Grades</div></div>
+          <div class="card-body">
+            <div class="grade-row">
+              <div><div class="grade-label">Data Structures & Algorithms</div><div class="grade-sub">CS 301</div></div>
+              <div class="grade-badge grade-a">A</div>
+            </div>
+            <div class="grade-row">
+              <div><div class="grade-label">Design Thinking</div><div class="grade-sub">DT 401</div></div>
+              <div class="grade-badge grade-a">A+</div>
+            </div>
+            <div class="grade-row">
+              <div><div class="grade-label">Business Ethics</div><div class="grade-sub">BUSA 201</div></div>
+              <div class="grade-badge grade-b">B+</div>
+            </div>
+            <div class="grade-row">
+              <div><div class="grade-label">Macroeconomics</div><div class="grade-sub">ECON 204</div></div>
+              <div class="grade-badge grade-b">B</div>
+            </div>
+            <div class="grade-row">
+              <div><div class="grade-label">African Economic History</div><div class="grade-sub">HIST 205</div></div>
+              <div class="grade-badge grade-b">B+</div>
+            </div>
+            <div class="grade-row">
+              <div><div class="grade-label">Introduction to Sciences</div><div class="grade-sub">SCI 102</div></div>
+              <div class="grade-badge grade-c">C+</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">GPA Trend</div></div>
+          <div class="card-body">
+            <div style="text-align:center;padding:2rem 0">
+              <div style="font-size:4rem;font-family:'Syne',sans-serif;font-weight:800;color:var(--sports)">3.8</div>
+              <div style="color:var(--muted);font-size:0.85rem;margin-top:0.5rem">Cumulative GPA</div>
+              <div style="color:var(--sports);font-size:0.8rem;margin-top:0.3rem">↑ +0.2 from last semester</div>
+              <div style="margin-top:2rem;display:flex;justify-content:center;gap:2rem">
+                <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--accent2)">92%</div><div style="font-size:0.73rem;color:var(--muted)">Attendance</div></div>
+                <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--accent)">78%</div><div style="font-size:0.73rem;color:var(--muted)">Tasks Done</div></div>
+                <div style="text-align:center"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--accent3)">6</div><div style="font-size:0.73rem;color:var(--muted)">Courses</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCUSSIONS -->
+    <div class="page" id="page-discussions">
+      <div class="greeting">
+        <h1><span>Discussions</span></h1>
+        <p>Join the conversation with your classmates</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Discussions</div><span class="badge badge-orange">3 unread</span></div>
+        <div class="card-body">
+          <div class="discussion-item">
+            <div class="disc-title">What is the role of African entrepreneurs in tech?</div>
+            <div class="disc-meta">BUSA 201 · 24 replies · <span style="color:var(--accent)">Active now</span></div>
+            <div class="disc-preview">Dr. Mukasa opened this discussion after the reading. Share your thoughts on how entrepreneurs from the continent are shaping the global tech scene...</div>
+          </div>
+          <div class="discussion-item">
+            <div class="disc-title">Big O Notation — tips for the midterm?</div>
+            <div class="disc-meta">CS 301 · 18 replies · 1h ago</div>
+            <div class="disc-preview">Hey everyone, can we share notes on time complexity? I'm struggling with the difference between O(n log n) and O(n²) in sorting algorithms...</div>
+          </div>
+          <div class="discussion-item">
+            <div class="disc-title">Rwanda's GDP growth — discuss the factors</div>
+            <div class="disc-meta">ECON 204 · 11 replies · 3h ago</div>
+            <div class="disc-preview">For your Market Analysis assignment, let's first discuss what macroeconomic factors have driven Rwanda's impressive growth in recent years...</div>
+          </div>
+          <div class="discussion-item">
+            <div class="disc-title">Study group for Science midterm</div>
+            <div class="disc-meta">SCI 102 · 7 replies · Yesterday</div>
+            <div class="disc-preview">Anyone interested in forming a study group? I was thinking we could meet in the library on Friday afternoon...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INBOX -->
+    <div class="page" id="page-inbox">
+      <div class="greeting">
+        <h1><span>Inbox</span></h1>
+        <p>2 unread messages</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Messages</div></div>
+        <div class="card-body" style="padding:0">
+          <div class="message-item unread">
+            <div class="msg-avatar" style="background:linear-gradient(135deg,#1e40af,#1d4ed8)">JK</div>
+            <div class="msg-info">
+              <div class="msg-from"><span>Prof. Jean Kagabo</span><span class="msg-time">Today, 9:14 AM</span></div>
+              <div class="msg-subject">Re: Data Structures Project Question</div>
+            </div>
+            <div class="msg-unread-dot"></div>
+          </div>
+          <div class="message-item unread">
+            <div class="msg-avatar" style="background:linear-gradient(135deg,#065f46,#047857)">AM</div>
+            <div class="msg-info">
+              <div class="msg-from"><span>Dr. Alice Mukasa</span><span class="msg-time">Yesterday</span></div>
+              <div class="msg-subject">Guest Speaker Confirmation — Please RSVP</div>
+            </div>
+            <div class="msg-unread-dot"></div>
+          </div>
+          <div class="message-item">
+            <div class="msg-avatar" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">NB</div>
+            <div class="msg-info">
+              <div class="msg-from"><span>Noa Bekele</span><span class="msg-time">Mar 2</span></div>
+              <div class="msg-subject">Feedback on your design prototype — great work!</div>
+            </div>
+          </div>
+          <div class="message-item">
+            <div class="msg-avatar" style="background:linear-gradient(135deg,#92400e,#b45309)">AD</div>
+            <div class="msg-info">
+              <div class="msg-from"><span>Prof. Aisha Diallo</span><span class="msg-time">Mar 1</span></div>
+              <div class="msg-subject">Office Hours Update</div>
+            </div>
+          </div>
+          <div class="message-item">
+            <div class="msg-avatar" style="background:linear-gradient(135deg,#0f766e,#0d9488)">ALU</div>
+            <div class="msg-info">
+              <div class="msg-from"><span>ALU Admin</span><span class="msg-time">Feb 28</span></div>
+              <div class="msg-subject">Spring 2026 Exam Schedule Released</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILES -->
+    <div class="page" id="page-files">
+      <div class="greeting">
+        <h1>Course <span>Files</span></h1>
+        <p>All your materials in one place</p>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Files</div></div>
+        <div class="card-body">
+          <div class="file-item">
+            <div class="file-icon">📄</div>
+            <div>
+              <div class="file-name">CS301_Week7_BinaryTrees.pdf</div>
+              <div class="file-meta">CS 301 · Uploaded Mar 1</div>
+            </div>
+            <div class="file-size">2.4 MB</div>
+          </div>
+          <div class="file-item">
+            <div class="file-icon">📊</div>
+            <div>
+              <div class="file-name">ECON204_MarketAnalysis_Template.xlsx</div>
+              <div class="file-meta">ECON 204 · Uploaded Feb 28</div>
+            </div>
+            <div class="file-size">980 KB</div>
+          </div>
+          <div class="file-item">
+            <div class="file-icon">📽️</div>
+            <div>
+              <div class="file-name">BUSA201_EthicsLecture8.mp4</div>
+              <div class="file-meta">BUSA 201 · Uploaded Feb 27</div>
+            </div>
+            <div class="file-size">145 MB</div>
+          </div>
+          <div class="file-item">
+            <div class="file-icon">📝</div>
+            <div>
+              <div class="file-name">DT401_DesignSprint_Guide.pdf</div>
+              <div class="file-meta">DT 401 · Uploaded Feb 25</div>
+            </div>
+            <div class="file-size">3.1 MB</div>
+          </div>
+          <div class="file-item">
+            <div class="file-icon">🎧</div>
+            <div>
+              <div class="file-name">HIST205_ColonialEra_Audio.mp3</div>
+              <div class="file-meta">HIST 205 · Uploaded Feb 20</div>
+            </div>
+            <div class="file-size">18 MB</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEALTH HUB -->
+    <div class="page" id="page-health">
+      <div class="greeting">
+        <h1>🌿 Health <span>Hub</span></h1>
+        <p>Stay healthy, stay sharp — your wellness dashboard</p>
+      </div>
+
+      <div class="health-cards" style="margin-bottom:1.5rem">
+        <!-- Water Full Card -->
+        <div class="health-card health-card-water">
+          <div class="health-card-icon">💧</div>
+          <div class="health-card-title">Daily Hydration</div>
+          <p>Your brain is 75% water. Staying hydrated improves focus, memory, and prevents fatigue during long study sessions.</p>
+
+          <div style="margin-bottom:0.5rem">
+            <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--water)" id="waterTimerHub">Next reminder in: <span id="wTimerVal">30:00</span></div>
+            <div class="health-sub">Reminder every 30 minutes</div>
+          </div>
+
+          <div class="water-progress" id="waterCupsHub"></div>
+          <div class="health-sub" id="waterCountHub">0 / 8 glasses today</div>
+
+          <div style="display:flex;gap:0.8rem;margin-top:1rem;flex-wrap:wrap">
+            <button class="btn-health btn-water" onclick="logWater()">+ Log a Glass</button>
+            <button class="btn-health" style="background:transparent;border:1px solid var(--water);color:var(--water)" onclick="resetWater()">Reset Day</button>
+          </div>
+
+          <div style="margin-top:1rem;font-size:0.8rem;color:#94a3b8">
+            💡 <em>Tip: Keep a water bottle at your desk. Drink before you feel thirsty!</em>
+          </div>
+        </div>
+
+        <!-- Sports Full Card -->
+        <div class="health-card health-card-sports">
+          <div class="health-card-icon">🏃</div>
+          <div class="health-card-title">Sports & Activity</div>
+          <p>30 minutes of exercise per day improves brain function, reduces stress, and helps you sleep better — making you a better student.</p>
+
+          <div style="margin-bottom:0.5rem">
+            <div style="font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--sports)">Next: <span id="sportsNextVal">Today 4:00 PM</span></div>
+            <div class="health-sub" id="sportsReminderSub">Soccer at the ALU Sports Complex</div>
+          </div>
+
+          <div id="sportsScheduleHub"></div>
+
+          <div style="display:flex;gap:0.8rem;margin-top:1rem;flex-wrap:wrap">
+            <button class="btn-health btn-sports" onclick="checkAllSports()">✓ Mark All Done</button>
+            <button class="btn-health" style="background:transparent;border:1px solid var(--sports);color:var(--sports)" onclick="resetSports()">Reset</button>
+          </div>
+
+          <div style="margin-top:1rem;font-size:0.8rem;color:#94a3b8">
+            💡 <em>Tip: Even a 10-minute walk between classes counts. Move your body!</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- Weekly summary -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Weekly Wellness Summary</div></div>
+        <div class="card-body">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center">
+            <div v-for="d in ['M','T','W','T','F','S','S']"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center">
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Mon</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Tue</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Wed</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Thu</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Fri</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Sat</div>
+            <div style="font-size:0.72rem;color:var(--muted);padding-bottom:4px">Sun</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center;margin-bottom:8px">
+            <div style="font-size:1.2rem">💧</div>
+            <div style="font-size:1.2rem">💧</div>
+            <div style="font-size:1.2rem">💧</div>
+            <div style="font-size:1.2rem;opacity:0.3">💧</div>
+            <div style="font-size:1.2rem;opacity:0.3">💧</div>
+            <div style="font-size:1.2rem;opacity:0.3">💧</div>
+            <div style="font-size:1.2rem;opacity:0.3">💧</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;text-align:center">
+            <div style="font-size:1.2rem">🏃</div>
+            <div style="font-size:1.2rem;opacity:0.3">🏃</div>
+            <div style="font-size:1.2rem">🏃</div>
+            <div style="font-size:1.2rem;opacity:0.3">🏃</div>
+            <div style="font-size:1.2rem;opacity:0.3">🏃</div>
+            <div style="font-size:1.2rem;opacity:0.3">🏃</div>
+            <div style="font-size:1.2rem;opacity:0.3">🏃</div>
+          </div>
+          <div style="margin-top:1rem;font-size:0.82rem;color:#94a3b8;text-align:center">3/7 days hydrated goal met · 2/7 days sports done this week</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE PAGE -->
+    <div class="page" id="page-profile">
+      <div class="greeting">
+        <h1>My <span>Profile</span></h1>
+        <p>View and manage your account information</p>
+      </div>
+
+      <div class="profile-layout">
+        <!-- LEFT: Avatar card -->
+        <div class="profile-left">
+          <div class="card">
+            <div class="card-body" style="text-align:center;padding:2rem 1.5rem">
+              <div class="profile-avatar-big" id="profileAvatarBig">AK</div>
+              <div class="profile-name" id="profileFullName">—</div>
+              <div class="profile-role-badge" id="profileRoleBadge">student</div>
+              <div class="profile-email-display" id="profileEmailDisplay">—</div>
+              <div class="profile-joined" id="profileJoined">Member since —</div>
+
+              <div class="profile-streaks">
+                <div class="streak-item">
+                  <div class="streak-val" id="profileWaterStreak">0</div>
+                  <div class="streak-label">💧 Water Streak</div>
+                </div>
+                <div class="streak-divider"></div>
+                <div class="streak-item">
+                  <div class="streak-val" id="profileSportsStreak">0</div>
+                  <div class="streak-label">🏃 Sport Streak</div>
+                </div>
+              </div>
+
+              <button class="btn-profile-action" onclick="toggleEditMode(true)">✏️ Edit Profile</button>
+              <button class="btn-profile-danger" onclick="if(confirm('Sign out?')) logout()">🚪 Sign Out</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Info + Edit -->
+        <div class="profile-right">
+          <!-- VIEW MODE -->
+          <div id="profileViewMode">
+            <div class="card" style="margin-bottom:1.2rem">
+              <div class="card-header">
+                <div class="card-title">Personal Information</div>
+                <a class="card-action" onclick="toggleEditMode(true)">Edit →</a>
+              </div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">First Name</div>
+                    <div class="info-value" id="infoFirstName">—</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Last Name</div>
+                    <div class="info-value" id="infoLastName">—</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value" id="infoEmail">—</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Role</div>
+                    <div class="info-value" id="infoRole">—</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value" id="infoPhone">—</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Member Since</div>
+                    <div class="info-value" id="infoJoined">—</div>
+                  </div>
+                </div>
+                <div class="info-item" style="margin-top:1rem">
+                  <div class="info-label">Bio</div>
+                  <div class="info-value" id="infoBio" style="line-height:1.6;color:#94a3b8;font-size:0.88rem">—</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><div class="card-title">Wellness Stats</div></div>
+              <div class="card-body">
+                <div class="info-grid">
+                  <div class="info-item">
+                    <div class="info-label">💧 Water Streak</div>
+                    <div class="info-value" id="infoWaterStreak" style="color:var(--water)">0 days</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">🏃 Sport Streak</div>
+                    <div class="info-value" id="infoSportsStreak" style="color:var(--sports)">0 days</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Account Status</div>
+                    <div class="info-value" style="color:var(--success)">✅ Active</div>
+                  </div>
+                  <div class="info-item">
+                    <div class="info-label">Account ID</div>
+                    <div class="info-value" id="infoId" style="font-family:monospace;font-size:0.8rem;color:var(--muted)">—</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- EDIT MODE -->
+          <div id="profileEditMode" style="display:none">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Edit Profile</div>
+                <a class="card-action" onclick="toggleEditMode(false)" style="color:var(--muted)">Cancel</a>
+              </div>
+              <div class="card-body">
+                <div class="info-grid" style="margin-bottom:1rem">
+                  <div class="form-group">
+                    <label class="form-label-sm">First Name</label>
+                    <input class="form-input-sm" id="editFirst" type="text" placeholder="First name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label-sm">Last Name</label>
+                    <input class="form-input-sm" id="editLast" type="text" placeholder="Last name" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label-sm">Email Address</label>
+                    <input class="form-input-sm" id="editEmail" type="email" placeholder="your@alu.edu" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label-sm">Phone Number</label>
+                    <input class="form-input-sm" id="editPhone" type="tel" placeholder="+250 700 000 000" />
+                  </div>
+                </div>
+                <div class="form-group" style="margin-bottom:1.2rem">
+                  <label class="form-label-sm">Bio</label>
+                  <textarea class="form-input-sm" id="editBio" rows="3" placeholder="Tell us a little about yourself…" style="resize:vertical"></textarea>
+                </div>
+
+                <div style="display:flex;gap:10px">
+                  <button class="btn-save" onclick="saveProfile()">💾 Save Changes</button>
+                  <button class="btn-cancel-edit" onclick="toggleEditMode(false)">Cancel</button>
+                </div>
+
+                <div class="save-alert" id="saveAlert"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEALTH SERVICE REQUEST PAGE -->
+    <div class="page" id="page-healthrequest">
+
+      <div class="greeting">
+        <h1>Health Service <span>Request</span></h1>
+        <p>Submit a request for medical, wellness, or counselling services on campus</p>
+      </div>
+
+      <!-- SUCCESS SCREEN -->
+      <div class="hsr-success" id="hsrSuccess">
+        <div class="success-ring">✅</div>
+        <h2>Request Submitted!</h2>
+        <p>Your health service request has been received.<br>Our team will confirm your appointment within 24 hours.</p>
+        <div class="hsr-ref" id="hsrRefCode">ALU-000000</div>
+        <br>
+        <button class="btn-new-request" onclick="resetHSR()">+ New Request</button>
+        <button class="btn-view-history" onclick="showHistoryTab()">View My Requests</button>
+      </div>
+
+      <!-- MAIN FORM + SIDEBAR -->
+      <div class="hsr-layout" id="hsrMain">
+
+        <!-- LEFT: FORM -->
+        <div>
+          <!-- Tab switcher: New Request / My Requests -->
+          <div class="auth-tabs" style="margin-bottom:1.5rem;max-width:360px">
+            <div class="auth-tab active" id="tabNewReq" onclick="switchHSRTab('new')">New Request</div>
+            <div class="auth-tab" id="tabHistory" onclick="switchHSRTab('history')">My Requests</div>
+          </div>
+
+          <!-- ===== NEW REQUEST FORM ===== -->
+          <div id="hsrFormSection">
+
+            <!-- Step indicator -->
+            <div class="hsr-steps" id="hsrStepBar">
+              <div class="hsr-step active" id="stepDot1">
+                <div class="step-circle">1</div>
+                <div class="step-label">Service Type</div>
+              </div>
+              <div class="hsr-step" id="stepDot2">
+                <div class="step-circle">2</div>
+                <div class="step-label">Details</div>
+              </div>
+              <div class="hsr-step" id="stepDot3">
+                <div class="step-circle">3</div>
+                <div class="step-label">Schedule</div>
+              </div>
+              <div class="hsr-step" id="stepDot4">
+                <div class="step-circle">4</div>
+                <div class="step-label">Review</div>
+              </div>
+            </div>
+
+            <!-- STEP 1: Service Type -->
+            <div class="card hsr-step-panel active" id="hsrPanel1">
+              <div class="card-header">
+                <div class="card-title">Step 1 — Choose Service Type</div>
+                <span style="font-size:0.75rem;color:var(--muted)">Step 1 of 4</span>
+              </div>
+              <div class="card-body">
+                <div class="service-types">
+                  <div class="service-type-card selected" data-service="General Consultation" onclick="selectService(this)">
+                    <span class="stc-emoji">🩺</span>
+                    <div class="stc-name">General Consultation</div>
+                    <div class="stc-desc">See a campus doctor or nurse</div>
+                  </div>
+                  <div class="service-type-card" data-service="Mental Health & Counselling" onclick="selectService(this)">
+                    <span class="stc-emoji">🧠</span>
+                    <div class="stc-name">Mental Health</div>
+                    <div class="stc-desc">Counselling &amp; psychological support</div>
+                  </div>
+                  <div class="service-type-card" data-service="Physiotherapy & Sports Injury" onclick="selectService(this)">
+                    <span class="stc-emoji">🏃</span>
+                    <div class="stc-name">Physiotherapy</div>
+                    <div class="stc-desc">Sports injury &amp; rehab treatment</div>
+                  </div>
+                  <div class="service-type-card" data-service="Nutrition & Dietetics" onclick="selectService(this)">
+                    <span class="stc-emoji">🥗</span>
+                    <div class="stc-name">Nutrition</div>
+                    <div class="stc-desc">Diet plans &amp; nutritional guidance</div>
+                  </div>
+                  <div class="service-type-card" data-service="Dental Care" onclick="selectService(this)">
+                    <span class="stc-emoji">🦷</span>
+                    <div class="stc-name">Dental Care</div>
+                    <div class="stc-desc">Teeth &amp; oral health checkup</div>
+                  </div>
+                  <div class="service-type-card" data-service="Eye Care & Optometry" onclick="selectService(this)">
+                    <span class="stc-emoji">👁️</span>
+                    <div class="stc-name">Eye Care</div>
+                    <div class="stc-desc">Vision tests &amp; optometry services</div>
+                  </div>
+                  <div class="service-type-card" data-service="Vaccination & Immunization" onclick="selectService(this)">
+                    <span class="stc-emoji">💉</span>
+                    <div class="stc-name">Vaccination</div>
+                    <div class="stc-desc">Immunization &amp; travel vaccines</div>
+                  </div>
+                  <div class="service-type-card" data-service="Lab Tests & Diagnostics" onclick="selectService(this)">
+                    <span class="stc-emoji">🔬</span>
+                    <div class="stc-name">Lab Tests</div>
+                    <div class="stc-desc">Blood work &amp; diagnostic tests</div>
+                  </div>
+                  <div class="service-type-card" data-service="Emergency & Urgent Care" onclick="selectService(this)">
+                    <span class="stc-emoji">🚨</span>
+                    <div class="stc-name">Urgent Care</div>
+                    <div class="stc-desc">Emergency &amp; immediate attention</div>
+                  </div>
+                </div>
+
+                <label class="hsr-label">Priority Level</label>
+                <div class="priority-options">
+                  <div class="priority-opt sel-low selected" data-priority="Low" onclick="selectPriority(this)">🟢 Low</div>
+                  <div class="priority-opt sel-medium" data-priority="Medium" onclick="selectPriority(this)">🟡 Medium</div>
+                  <div class="priority-opt sel-high" data-priority="High — Urgent" onclick="selectPriority(this)">🔴 High / Urgent</div>
+                </div>
+
+                <div class="hsr-nav">
+                  <button class="btn-hsr-next" onclick="goStep(2)">Next: Add Details →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 2: Personal & Medical Details -->
+            <div class="card hsr-step-panel" id="hsrPanel2">
+              <div class="card-header">
+                <div class="card-title">Step 2 — Personal &amp; Medical Details</div>
+                <span style="font-size:0.75rem;color:var(--muted)">Step 2 of 4</span>
+              </div>
+              <div class="card-body">
+                <div class="hsr-form-row">
+                  <div>
+                    <label class="hsr-label">Full Name *</label>
+                    <input class="hsr-input" id="hsrName" type="text" placeholder="Your full name" />
+                    <div class="field-error" id="errName">Please enter your name.</div>
+                  </div>
+                  <div>
+                    <label class="hsr-label">Student / Staff ID *</label>
+                    <input class="hsr-input" id="hsrStudentId" type="text" placeholder="e.g. ALU-2024-001" />
+                    <div class="field-error" id="errStudentId">Please enter your ID.</div>
+                  </div>
+                </div>
+
+                <div class="hsr-form-row">
+                  <div>
+                    <label class="hsr-label">Email Address *</label>
+                    <input class="hsr-input" id="hsrEmail" type="email" placeholder="your@alu.edu" />
+                    <div class="field-error" id="errEmail">Enter a valid email.</div>
+                  </div>
+                  <div>
+                    <label class="hsr-label">Phone Number</label>
+                    <input class="hsr-input" id="hsrPhone" type="tel" placeholder="+250 700 000 000" />
+                  </div>
+                </div>
+
+                <label class="hsr-label">Date of Birth</label>
+                <input class="hsr-input" id="hsrDob" type="date" style="max-width:220px" />
+
+                <label class="hsr-label">Current Symptoms / Reason for Visit *</label>
+                <textarea class="hsr-input" id="hsrSymptoms" rows="4" placeholder="Describe your symptoms or what you need help with in as much detail as possible…"></textarea>
+                <div class="field-error" id="errSymptoms">Please describe your symptoms.</div>
+
+                <label class="hsr-label">Known Allergies or Medical Conditions</label>
+                <input class="hsr-input" id="hsrAllergies" type="text" placeholder="e.g. Penicillin, Asthma, Diabetes — or type 'None'" />
+
+                <label class="hsr-label">Current Medications (if any)</label>
+                <input class="hsr-input" id="hsrMedications" type="text" placeholder="e.g. Paracetamol 500mg — or type 'None'" />
+
+                <div class="hsr-nav">
+                  <button class="btn-hsr-back" onclick="goStep(1)">← Back</button>
+                  <button class="btn-hsr-next" onclick="goStep(3)">Next: Schedule →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 3: Appointment Scheduling -->
+            <div class="card hsr-step-panel" id="hsrPanel3">
+              <div class="card-header">
+                <div class="card-title">Step 3 — Preferred Appointment</div>
+                <span style="font-size:0.75rem;color:var(--muted)">Step 3 of 4</span>
+              </div>
+              <div class="card-body">
+                <div class="hsr-form-row">
+                  <div>
+                    <label class="hsr-label">Preferred Date *</label>
+                    <input class="hsr-input" id="hsrDate" type="date" />
+                    <div class="field-error" id="errDate">Please select a date.</div>
+                  </div>
+                  <div>
+                    <label class="hsr-label">Consultation Mode *</label>
+                    <select class="hsr-input" id="hsrMode">
+                      <option value="">Select mode…</option>
+                      <option value="In-Person">🏥 In-Person (Campus Clinic)</option>
+                      <option value="Virtual / Telehealth">💻 Virtual / Telehealth</option>
+                      <option value="Home Visit">🏠 Home Visit (on-campus residence)</option>
+                    </select>
+                    <div class="field-error" id="errMode">Please select a mode.</div>
+                  </div>
+                </div>
+
+                <label class="hsr-label">Available Time Slots</label>
+                <div class="hsr-hint">Select your preferred time. Greyed-out slots are already booked.</div>
+                <div class="slot-grid" id="slotGrid"></div>
+                <div class="field-error" id="errSlot">Please select a time slot.</div>
+
+                <label class="hsr-label" style="margin-top:1.2rem">Preferred Clinician (optional)</label>
+                <select class="hsr-input" id="hsrClinician">
+                  <option value="">No preference — assign me to any available clinician</option>
+                  <option value="Dr. Sarah Reeves">Dr. Sarah Reeves — General &amp; Wellness</option>
+                  <option value="Dr. Felix Mugisha">Dr. Felix Mugisha — Mental Health &amp; Counselling</option>
+                  <option value="Dr. Ama Owusu">Dr. Ama Owusu — Physiotherapy &amp; Sports</option>
+                  <option value="Dr. Liam Nkosi">Dr. Liam Nkosi — Nutrition &amp; Dietetics</option>
+                </select>
+
+                <label class="hsr-label">Additional Notes for the Clinician</label>
+                <textarea class="hsr-input" id="hsrNotes" rows="3" placeholder="Any extra context, special requirements or preferences…"></textarea>
+
+                <div style="margin-top:1.2rem;padding:0.9rem;background:rgba(6,182,212,0.07);border:1px solid rgba(6,182,212,0.2);border-radius:10px;font-size:0.8rem;color:#94a3b8;line-height:1.55">
+                  📌 <strong style="color:var(--accent2)">Reminder:</strong> For emergencies, please go directly to the campus clinic or call <strong style="color:var(--text)">+250 788 000 911</strong>.
+                  Appointment slots are subject to clinician availability and will be confirmed via email.
+                </div>
+
+                <div class="hsr-nav">
+                  <button class="btn-hsr-back" onclick="goStep(2)">← Back</button>
+                  <button class="btn-hsr-next" onclick="goStep(4)">Review Request →</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- STEP 4: Review & Submit -->
+            <div class="card hsr-step-panel" id="hsrPanel4">
+              <div class="card-header">
+                <div class="card-title">Step 4 — Review &amp; Confirm</div>
+                <span style="font-size:0.75rem;color:var(--muted)">Step 4 of 4</span>
+              </div>
+              <div class="card-body">
+                <p style="font-size:0.83rem;color:var(--muted);margin-bottom:1.2rem">Please review the details below before submitting your request.</p>
+
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.2rem">
+                  <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:0.8rem">Service</div>
+                  <div class="review-item"><span class="review-key">Type</span><span class="review-val" id="rvService">—</span></div>
+                  <div class="review-item"><span class="review-key">Priority</span><span class="review-val" id="rvPriority">—</span></div>
+                </div>
+
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.2rem">
+                  <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:0.8rem">Patient Details</div>
+                  <div class="review-item"><span class="review-key">Name</span><span class="review-val" id="rvName">—</span></div>
+                  <div class="review-item"><span class="review-key">ID</span><span class="review-val" id="rvId">—</span></div>
+                  <div class="review-item"><span class="review-key">Email</span><span class="review-val" id="rvEmail">—</span></div>
+                  <div class="review-item"><span class="review-key">Symptoms</span><span class="review-val" id="rvSymptoms" style="max-width:55%;font-size:0.8rem">—</span></div>
+                  <div class="review-item"><span class="review-key">Allergies</span><span class="review-val" id="rvAllergies">—</span></div>
+                </div>
+
+                <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:1.2rem">
+                  <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--muted);margin-bottom:0.8rem">Appointment</div>
+                  <div class="review-item"><span class="review-key">Date</span><span class="review-val" id="rvDate">—</span></div>
+                  <div class="review-item"><span class="review-key">Time Slot</span><span class="review-val" id="rvSlot">—</span></div>
+                  <div class="review-item"><span class="review-key">Mode</span><span class="review-val" id="rvMode">—</span></div>
+                  <div class="review-item"><span class="review-key">Clinician</span><span class="review-val" id="rvClinician">—</span></div>
+                </div>
+
+                <div style="display:flex;align-items:flex-start;gap:10px;padding:0.9rem;background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:10px;font-size:0.78rem;color:#94a3b8;margin-bottom:1.4rem">
+                  <span style="font-size:1rem;flex-shrink:0">🔒</span>
+                  Your health information is kept strictly confidential and is only accessible to authorised ALU healthcare staff in accordance with our privacy policy.
+                </div>
+
+                <div class="hsr-nav">
+                  <button class="btn-hsr-back" onclick="goStep(3)">← Back</button>
+                  <button class="btn-hsr-next" id="btnSubmitHSR" onclick="submitHSR()" style="background:linear-gradient(135deg,#22c55e,#16a34a)">
+                    ✅ Submit Request
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- end hsrFormSection -->
+
+          <!-- ===== MY REQUESTS HISTORY ===== -->
+          <div id="hsrHistorySection" style="display:none">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">My Health Requests</div>
+                <a class="card-action" onclick="switchHSRTab('new')">+ New Request</a>
+              </div>
+              <div class="card-body" id="hsrHistoryBody">
+                <p style="color:var(--muted);font-size:0.85rem;text-align:center;padding:2rem 0">No requests yet. Submit your first health service request.</p>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- end LEFT -->
+
+        <!-- RIGHT: Summary Sidebar -->
+        <div>
+          <div class="hsr-summary-card">
+            <div class="hsr-summary-header">📋 Request Summary</div>
+            <div class="hsr-summary-body">
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">🩺</span>
+                <div>
+                  <div class="hsr-sum-key">Service</div>
+                  <div class="hsr-sum-val" id="sumService">General Consultation</div>
+                </div>
+              </div>
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">⚡</span>
+                <div>
+                  <div class="hsr-sum-key">Priority</div>
+                  <div class="hsr-sum-val" id="sumPriority">Low</div>
+                </div>
+              </div>
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">👤</span>
+                <div>
+                  <div class="hsr-sum-key">Name</div>
+                  <div class="hsr-sum-val" id="sumName">—</div>
+                </div>
+              </div>
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">📅</span>
+                <div>
+                  <div class="hsr-sum-key">Date</div>
+                  <div class="hsr-sum-val" id="sumDate">Not selected</div>
+                </div>
+              </div>
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">🕐</span>
+                <div>
+                  <div class="hsr-sum-key">Time Slot</div>
+                  <div class="hsr-sum-val" id="sumSlot">Not selected</div>
+                </div>
+              </div>
+              <div class="hsr-summary-row">
+                <span class="hsr-sum-icon">💻</span>
+                <div>
+                  <div class="hsr-sum-key">Mode</div>
+                  <div class="hsr-sum-val" id="sumMode">Not selected</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Campus clinic info -->
+          <div class="card" style="margin-top:1rem">
+            <div class="card-header"><div class="card-title">🏥 Campus Clinic Info</div></div>
+            <div class="card-body" style="font-size:0.82rem;color:#94a3b8;line-height:1.8">
+              <div>📍 <strong style="color:var(--text)">Location:</strong> Block C, Ground Floor</div>
+              <div>⏰ <strong style="color:var(--text)">Hours:</strong> Mon–Fri, 8 AM – 6 PM</div>
+              <div>📞 <strong style="color:var(--text)">Phone:</strong> +250 788 000 200</div>
+              <div>🚨 <strong style="color:var(--text)">Emergency:</strong> +250 788 000 911</div>
+              <div style="margin-top:0.6rem;padding:0.6rem 0.8rem;background:rgba(244,63,94,0.08);border:1px solid rgba(244,63,94,0.2);border-radius:8px;color:#fda4af;font-size:0.75rem">
+                For life-threatening emergencies, call <strong>911</strong> or go directly to the nearest hospital.
+              </div>
+            </div>
+          </div>
+        </div><!-- end RIGHT sidebar -->
+
+      </div><!-- end hsr-layout -->
+    </div><!-- end page-healthrequest -->
+
+  </main>
+</div>
+
+<script>
+  // ============================================================
+  //  AUTH GUARD + SESSION + USER DATABASE (mirrors login.html)
+  // ============================================================
+  const SESSION = {
+    get() { try { return JSON.parse(sessionStorage.getItem('alu_session')); } catch { return null; } },
+    update(data) {
+      const s = this.get();
+      if (s) sessionStorage.setItem('alu_session', JSON.stringify({ ...s, ...data }));
+    },
+    clear() { sessionStorage.removeItem('alu_session'); }
+  };
+
+  // localStorage user store (same as login.html)
+  const UserDB = {
+    getStored() { try { return JSON.parse(localStorage.getItem('alu_users') || '[]'); } catch { return []; } },
+    saveAll(users) { localStorage.setItem('alu_users', JSON.stringify(users)); },
+    findById(id) {
+      // Check localStorage first, then demo users
+      const stored = this.getStored();
+      const inStored = stored.find(u => u.id === id);
+      if (inStored) return inStored;
+      return DEMO_PROFILE_DATA.find(u => u.id === id);
+    },
+    updateUser(updated) {
+      const stored = this.getStored();
+      const idx = stored.findIndex(u => u.id === updated.id);
+      if (idx !== -1) {
+        stored[idx] = { ...stored[idx], ...updated };
+        this.saveAll(stored);
+        return true;
+      }
+      // If it's a demo user and they edited, save them into localStorage
+      stored.push(updated);
+      this.saveAll(stored);
+      return true;
+    }
+  };
+
+  // Minimal demo profile fallback data
+  const DEMO_PROFILE_DATA = [
+    { id: 1, firstName:'Amara', lastName:'Kamara', email:'student@alu.edu', role:'student', phone:'+250 788 100 001', bio:'Computer Science student passionate about health tech.', joinedAt:'2024-09-01', avatar:'AK', avatarGradient:'linear-gradient(135deg,#a855f7,#06b6d4)', waterStreak:3, sportsStreak:2 },
+    { id: 2, firstName:'James', lastName:'Mwangi', email:'trainer@alu.edu', role:'trainer', phone:'+250 788 100 002', bio:'Certified fitness trainer and wellness coach at ALU.', joinedAt:'2023-02-15', avatar:'JM', avatarGradient:'linear-gradient(135deg,#f97316,#fb923c)', waterStreak:7, sportsStreak:14 },
+    { id: 3, firstName:'Sarah', lastName:'Reeves', email:'health@alu.edu', role:'clinician', phone:'+250 788 100 003', bio:'Campus clinician specialising in student wellbeing.', joinedAt:'2022-08-20', avatar:'DR', avatarGradient:'linear-gradient(135deg,#38bdf8,#4ade80)', waterStreak:5, sportsStreak:4 },
+    { id: 4, firstName:'System', lastName:'Admin', email:'admin@alu.edu', role:'admin', phone:'+250 788 100 000', bio:'Platform administrator for ALU Healthcare.', joinedAt:'2021-01-01', avatar:'SA', avatarGradient:'linear-gradient(135deg,#f43f5e,#a855f7)', waterStreak:0, sportsStreak:0 }
+  ];
+
+  const currentUser = SESSION.get();
+  if (!currentUser) { window.location.href = 'index.html'; }
+
+  // ── Inject user info into topbar & greeting ──
+  function injectUserInfo() {
+    if (!currentUser) return;
+    const avatar = document.querySelector('.avatar');
+    if (avatar) {
+      avatar.textContent = currentUser.avatar || (currentUser.name || 'ME').substring(0,2).toUpperCase();
+      if (currentUser.avatarGradient) avatar.style.background = currentUser.avatarGradient;
+    }
+    const greeting = document.querySelector('.greeting h1');
+    if (greeting) {
+      const firstName = currentUser.firstName || currentUser.name?.split(' ')[0] || 'there';
+      const hour = new Date().getHours();
+      const tod = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+      greeting.innerHTML = `Good ${tod}, <span>${firstName}</span> 👋`;
+    }
+  }
+
+  // ── Render Profile Page ──
+  function renderProfile() {
+    const u = currentUser;
+    if (!u) return;
+
+    // Avatar
+    const avatarEl = document.getElementById('profileAvatarBig');
+    if (avatarEl) {
+      avatarEl.textContent = u.avatar || (u.name||'ME').substring(0,2).toUpperCase();
+      avatarEl.style.background = u.avatarGradient || 'linear-gradient(135deg,#a855f7,#06b6d4)';
+      avatarEl.style.color = 'white';
+    }
+
+    const fullName = (u.firstName || '') + ' ' + (u.lastName || u.name || '');
+    setText('profileFullName', fullName.trim() || u.name || '—');
+    setText('profileRoleBadge', u.role || 'student');
+    setText('profileEmailDisplay', u.email || '—');
+    setText('profileJoined', 'Member since ' + formatDate(u.joinedAt));
+    setText('profileWaterStreak', u.waterStreak ?? 0);
+    setText('profileSportsStreak', u.sportsStreak ?? 0);
+
+    // Info grid
+    setText('infoFirstName', u.firstName || u.name?.split(' ')[0] || '—');
+    setText('infoLastName', u.lastName || u.name?.split(' ').slice(1).join(' ') || '—');
+    setText('infoEmail', u.email || '—');
+    setText('infoRole', capitalize(u.role) || '—');
+    setText('infoPhone', u.phone || 'Not provided');
+    setText('infoJoined', formatDate(u.joinedAt));
+    setText('infoBio', u.bio || 'No bio added yet.');
+    setText('infoWaterStreak', (u.waterStreak ?? 0) + ' days');
+    setText('infoSportsStreak', (u.sportsStreak ?? 0) + ' days');
+    setText('infoId', '#' + (u.id || 'N/A'));
+  }
+
+  function toggleEditMode(on) {
+    document.getElementById('profileViewMode').style.display = on ? 'none' : 'block';
+    document.getElementById('profileEditMode').style.display = on ? 'block' : 'none';
+
+    if (on) {
+      const u = currentUser;
+      document.getElementById('editFirst').value = u.firstName || u.name?.split(' ')[0] || '';
+      document.getElementById('editLast').value = u.lastName || u.name?.split(' ').slice(1).join(' ') || '';
+      document.getElementById('editEmail').value = u.email || '';
+      document.getElementById('editPhone').value = u.phone || '';
+      document.getElementById('editBio').value = u.bio || '';
+      document.getElementById('saveAlert').textContent = '';
+    }
+  }
+
+  function saveProfile() {
+    const first = document.getElementById('editFirst').value.trim();
+    const last  = document.getElementById('editLast').value.trim();
+    const email = document.getElementById('editEmail').value.trim();
+    const phone = document.getElementById('editPhone').value.trim();
+    const bio   = document.getElementById('editBio').value.trim();
+    const alert = document.getElementById('saveAlert');
+
+    if (!first || !last || !email) {
+      alert.style.color = '#fda4af';
+      alert.textContent = '⚠️ First name, last name and email are required.';
+      return;
+    }
+
+    // Build updated user
+    const updated = {
+      ...currentUser,
+      firstName: first,
+      lastName: last,
+      name: first + ' ' + last,
+      email,
+      phone,
+      bio,
+      avatar: (first[0] + last[0]).toUpperCase()
+    };
+
+    // Persist to localStorage
+    UserDB.updateUser(updated);
+
+    // Update session
+    SESSION.update(updated);
+    Object.assign(currentUser, updated);
+
+    // Re-render
+    renderProfile();
+    injectUserInfo();
+    toggleEditMode(false);
+
+    alert.style.color = '#86efac';
+    alert.textContent = '✅ Profile updated successfully!';
+  }
+
+  function logout() {
+    SESSION.clear();
+    window.location.href = 'login.html';
+  }
+
+  // ── Helpers ──
+  function setText(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  }
+
+  function formatDate(str) {
+    if (!str) return '—';
+    try {
+      return new Date(str).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+    } catch { return str; }
+  }
+
+  function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  // === NAVIGATION ===
+  function navigate(page, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    if (el) el.classList.add('active');
+    renderHealthCards();
+    if (page === 'profile') renderProfile();
+  }
+
+  // === CALENDAR ===
+  function renderCalendar() {
+    const grid = document.getElementById('calendarGrid');
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    let html = days.map(d => `<div class="cal-day-header">${d}</div>`).join('');
+    // March 2026 starts on Sunday
+    const eventDays = [4, 7, 8, 10, 11, 14, 18, 22];
+    const today = 4;
+    for (let i = 0; i < 31; i++) {
+      const day = i + 1;
+      const isToday = day === today;
+      const hasEvent = eventDays.includes(day);
+      html += `<div class="cal-day${isToday ? ' today' : ''}${hasEvent && !isToday ? ' has-event' : ''}">${day}</div>`;
+    }
+    grid.innerHTML = html;
+  }
+
+  renderCalendar();
+
+  // === WATER TRACKER ===
+  let waterCount = 0;
+
+  function renderWaterCups(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '';
+    for (let i = 0; i < 8; i++) {
+      const filled = i < waterCount;
+      html += `<div class="water-cup ${filled ? 'filled' : ''}" onclick="logWater()">
+        <div class="water-cup-fill" style="height:${filled ? '100%' : '0'}"></div>
+      </div>`;
+    }
+    container.innerHTML = html;
+  }
+
+  function updateWaterCount() {
+    const sub = document.getElementById('waterCount');
+    const subHub = document.getElementById('waterCountHub');
+    const text = `${waterCount} / 8 glasses today`;
+    if (sub) sub.textContent = text;
+    if (subHub) subHub.textContent = text;
+  }
+
+  function logWater() {
+    if (waterCount < 8) {
+      waterCount++;
+      renderWaterCups('waterCups');
+      renderWaterCups('waterCupsHub');
+      updateWaterCount();
+      if (waterCount === 8) {
+        showToast('water', '🎉 Hydration Goal Met!', "You've had all 8 glasses today. Amazing job!");
+      }
+    }
+    resetWaterTimer();
+  }
+
+  function resetWater() {
+    waterCount = 0;
+    renderWaterCups('waterCups');
+    renderWaterCups('waterCupsHub');
+    updateWaterCount();
+  }
+
+  // === SPORTS SCHEDULE ===
+  const sports = [
+    { time: '7:00 AM', activity: '🧘 Morning Yoga', done: false },
+    { time: '12:30 PM', activity: '🚶 Midday Walk', done: false },
+    { time: '4:00 PM', activity: '⚽ Soccer Practice', done: false },
+    { time: '6:30 PM', activity: '🏋️ Gym / Workout', done: false },
+  ];
+
+  function renderSports(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    let html = '';
+    sports.forEach((s, i) => {
+      html += `<div class="sport-item">
+        <div class="sport-time">${s.time}</div>
+        <div class="sport-check ${s.done ? 'done' : ''}" onclick="toggleSport(${i})">
+          ${s.done ? '✓' : ''}
+        </div>
+        <span style="${s.done ? 'text-decoration:line-through;opacity:0.5' : ''}">${s.activity}</span>
+      </div>`;
+    });
+    container.innerHTML = html;
+  }
+
+  function toggleSport(i) {
+    sports[i].done = !sports[i].done;
+    renderSports('sportsSchedule');
+    renderSports('sportsScheduleHub');
+    const doneCount = sports.filter(s => s.done).length;
+    if (doneCount === sports.length) {
+      showToast('sports', '🏆 All Activities Done!', "You completed all sports for today. Incredible!");
+    }
+  }
+
+  function checkAllSports() {
+    sports.forEach(s => s.done = true);
+    renderSports('sportsSchedule');
+    renderSports('sportsScheduleHub');
+    showToast('sports', '🏆 All Activities Done!', "You completed all sports for today. Incredible!");
+  }
+
+  function resetSports() {
+    sports.forEach(s => s.done = false);
+    renderSports('sportsSchedule');
+    renderSports('sportsScheduleHub');
+  }
+
+  // === RENDER ALL HEALTH ===
+  function renderHealthCards() {
+    renderWaterCups('waterCups');
+    renderWaterCups('waterCupsHub');
+    renderSports('sportsSchedule');
+    renderSports('sportsScheduleHub');
+    updateWaterCount();
+  }
+
+  renderHealthCards();
+  injectUserInfo();
+  renderProfile();
+
+  // === WATER TIMER ===
+  let waterSeconds = 30 * 60;
+  let waterTimerInterval;
+
+  function resetWaterTimer() {
+    waterSeconds = 30 * 60;
+  }
+
+  function tickWater() {
+    if (waterSeconds > 0) {
+      waterSeconds--;
+    } else {
+      waterSeconds = 30 * 60;
+      showWaterToast();
+    }
+    const mins = Math.floor(waterSeconds / 60).toString().padStart(2, '0');
+    const secs = (waterSeconds % 60).toString().padStart(2, '0');
+    const el = document.getElementById('wTimerVal');
+    if (el) el.textContent = `${mins}:${secs}`;
+  }
+
+  waterTimerInterval = setInterval(tickWater, 1000);
+
+  // === SPORTS TIMER (Daily) ===
+  let nextSportIndex = 0;
+
+  function updateSportsNext() {
+    const upcoming = sports.find(s => !s.done);
+    const el = document.getElementById('sportsNextVal');
+    const sub = document.getElementById('sportsReminderSub');
+    if (upcoming && el) {
+      el.textContent = `Today ${upcoming.time}`;
+      if (sub) sub.textContent = upcoming.activity;
+    } else if (el) {
+      el.textContent = 'All done for today! 🎉';
+      if (sub) sub.textContent = 'Great job staying active!';
+    }
+  }
+
+  setInterval(updateSportsNext, 5000);
+  updateSportsNext();
+
+  // === TOASTS ===
+  function showToast(type, title, body) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+      <div class="toast-icon">${type === 'water' ? '💧' : '🏃'}</div>
+      <div class="toast-content">
+        <div class="toast-title">${title}</div>
+        <div class="toast-body">${body}</div>
+      </div>
+      <div class="toast-dismiss" onclick="dismissToast(this.parentElement)">✕</div>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => dismissToast(toast), 7000);
+  }
+
+  function dismissToast(el) {
+    if (!el) return;
+    el.style.animation = 'slideOut 0.3s ease forwards';
+    setTimeout(() => el.remove(), 300);
+  }
+
+  function showWaterToast() {
+    showToast('water', '💧 Time to Hydrate!', "You haven't had water in a while. Take a sip and stay sharp!");
+  }
+
+  function showSportsToast() {
+    const upcoming = sports.find(s => !s.done);
+    const msg = upcoming
+      ? `Don't forget: ${upcoming.activity} at ${upcoming.time}!`
+      : "You've completed all today's activities. Great work!";
+    showToast('sports', '🏃 Stay Active!', msg);
+  }
+
+  // Auto reminders
+  setTimeout(() => showWaterToast(), 4000);
+  setTimeout(() => showSportsToast(), 10000);
+
+  // Every 30 minutes
+  setInterval(() => showWaterToast(), 30 * 60 * 1000);
+  // Every 2 hours
+  setInterval(() => showSportsToast(), 2 * 60 * 60 * 1000);
+
+  // ============================================================
+  //  HEALTH SERVICE REQUEST — State & Logic
+  // ============================================================
+
+  const HSR = {
+    currentStep: 1,
+    service: 'General Consultation',
+    priority: 'Low',
+    name: '', studentId: '', email: '', phone: '', dob: '',
+    symptoms: '', allergies: '', medications: '',
+    date: '', slot: '', mode: '', clinician: '', notes: ''
+  };
+
+  // Time slots — some marked as taken to simulate booking
+  const ALL_SLOTS = [
+    { time: '08:00 AM', taken: false },
+    { time: '08:30 AM', taken: true  },
+    { time: '09:00 AM', taken: false },
+    { time: '09:30 AM', taken: true  },
+    { time: '10:00 AM', taken: false },
+    { time: '10:30 AM', taken: false },
+    { time: '11:00 AM', taken: true  },
+    { time: '11:30 AM', taken: false },
+    { time: '12:00 PM', taken: false },
+    { time: '12:30 PM', taken: true  },
+    { time: '02:00 PM', taken: false },
+    { time: '02:30 PM', taken: false },
+    { time: '03:00 PM', taken: true  },
+    { time: '03:30 PM', taken: false },
+    { time: '04:00 PM', taken: false },
+    { time: '04:30 PM', taken: false },
+  ];
+
+  function renderSlotGrid() {
+    const grid = document.getElementById('slotGrid');
+    if (!grid) return;
+    grid.innerHTML = ALL_SLOTS.map(s => `
+      <div class="slot-btn ${s.taken ? 'taken' : ''} ${HSR.slot === s.time ? 'selected' : ''}"
+           onclick="${s.taken ? '' : `pickSlot('${s.time}', this)`}">
+        ${s.time}${s.taken ? '<br><span style="font-size:0.62rem">Booked</span>' : ''}
+      </div>
+    `).join('');
+  }
+
+  function pickSlot(time, el) {
+    HSR.slot = time;
+    document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('selected'));
+    el.classList.add('selected');
+    document.getElementById('sumSlot').textContent = time;
+    hideErr('errSlot');
+  }
+
+  function selectService(el) {
+    document.querySelectorAll('.service-type-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    HSR.service = el.dataset.service;
+    document.getElementById('sumService').textContent = HSR.service;
+
+    // Update service emoji in summary
+    const emoji = el.querySelector('.stc-emoji')?.textContent || '🩺';
+    document.querySelector('.hsr-summary-row .hsr-sum-icon').textContent = emoji;
+  }
+
+  function selectPriority(el) {
+    document.querySelectorAll('.priority-opt').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+    HSR.priority = el.dataset.priority;
+    document.getElementById('sumPriority').textContent = HSR.priority;
+  }
+
+  function goStep(n) {
+    // Validate current step before moving forward
+    if (n > HSR.currentStep) {
+      if (!validateStep(HSR.currentStep)) return;
+    }
+
+    // Save live values
+    if (HSR.currentStep === 2) {
+      HSR.name       = val('hsrName');
+      HSR.studentId  = val('hsrStudentId');
+      HSR.email      = val('hsrEmail');
+      HSR.phone      = val('hsrPhone');
+      HSR.dob        = val('hsrDob');
+      HSR.symptoms   = val('hsrSymptoms');
+      HSR.allergies  = val('hsrAllergies') || 'None';
+      HSR.medications= val('hsrMedications') || 'None';
+      document.getElementById('sumName').textContent = HSR.name || '—';
+    }
+    if (HSR.currentStep === 3) {
+      HSR.date      = val('hsrDate');
+      HSR.mode      = val('hsrMode');
+      HSR.clinician = val('hsrClinician') || 'No preference';
+      HSR.notes     = val('hsrNotes');
+      document.getElementById('sumDate').textContent = HSR.date ? formatDate(HSR.date) : 'Not selected';
+      document.getElementById('sumMode').textContent = HSR.mode || 'Not selected';
+    }
+
+    // Hide current panel, show new
+    document.getElementById('hsrPanel' + HSR.currentStep).classList.remove('active');
+    document.getElementById('hsrPanel' + n).classList.add('active');
+
+    // Update step dots
+    for (let i = 1; i <= 4; i++) {
+      const dot = document.getElementById('stepDot' + i);
+      dot.classList.remove('active', 'completed');
+      if (i < n) dot.classList.add('completed');
+      else if (i === n) dot.classList.add('active');
+    }
+
+    HSR.currentStep = n;
+
+    // If going to review, populate
+    if (n === 4) populateReview();
+
+    // Render slots when going to step 3
+    if (n === 3) {
+      renderSlotGrid();
+      // Set min date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('hsrDate').min = today;
+      // Live summary updates
+      document.getElementById('hsrDate').addEventListener('change', e => {
+        HSR.date = e.target.value;
+        document.getElementById('sumDate').textContent = formatDate(HSR.date);
+        hideErr('errDate');
+      });
+      document.getElementById('hsrMode').addEventListener('change', e => {
+        HSR.mode = e.target.value;
+        document.getElementById('sumMode').textContent = HSR.mode || 'Not selected';
+        hideErr('errMode');
+      });
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function validateStep(step) {
+    let ok = true;
+    if (step === 2) {
+      if (!val('hsrName'))       { showErr('errName');      ok = false; }
+      if (!val('hsrStudentId'))  { showErr('errStudentId'); ok = false; }
+      const email = val('hsrEmail');
+      if (!email || !email.includes('@')) { showErr('errEmail'); ok = false; }
+      if (!val('hsrSymptoms'))   { showErr('errSymptoms');  ok = false; }
+    }
+    if (step === 3) {
+      if (!val('hsrDate'))  { showErr('errDate');  ok = false; }
+      if (!val('hsrMode'))  { showErr('errMode');  ok = false; }
+      if (!HSR.slot)        { showErr('errSlot');  ok = false; }
+    }
+    return ok;
+  }
+
+  function populateReview() {
+    setText('rvService',   HSR.service);
+    setText('rvPriority',  HSR.priority);
+    setText('rvName',      HSR.name);
+    setText('rvId',        HSR.studentId);
+    setText('rvEmail',     HSR.email);
+    setText('rvSymptoms',  HSR.symptoms.length > 100 ? HSR.symptoms.slice(0,100) + '…' : HSR.symptoms);
+    setText('rvAllergies', HSR.allergies);
+    setText('rvDate',      formatDate(HSR.date));
+    setText('rvSlot',      HSR.slot || '—');
+    setText('rvMode',      HSR.mode);
+    setText('rvClinician', val('hsrClinician') || 'No preference');
+  }
+
+  function submitHSR() {
+    const btn = document.getElementById('btnSubmitHSR');
+    btn.disabled = true;
+    btn.textContent = '⏳ Submitting…';
+
+    setTimeout(() => {
+      // Generate reference code
+      const ref = 'ALU-' + Date.now().toString().slice(-6);
+      HSR.refCode = ref;
+
+      // Save to localStorage
+      const requestRecord = {
+        ref, service: HSR.service, priority: HSR.priority,
+        name: HSR.name, studentId: HSR.studentId, email: HSR.email,
+        symptoms: HSR.symptoms, allergies: HSR.allergies,
+        date: HSR.date, slot: HSR.slot, mode: HSR.mode,
+        clinician: val('hsrClinician') || 'No preference',
+        notes: HSR.notes,
+        submittedAt: new Date().toISOString(),
+        status: 'Pending'
+      };
+
+      try {
+        const existing = JSON.parse(localStorage.getItem('alu_health_requests') || '[]');
+        existing.push(requestRecord);
+        localStorage.setItem('alu_health_requests', JSON.stringify(existing));
+      } catch(e) {}
+
+      // Show success
+      document.getElementById('hsrMain').style.display = 'none';
+      const success = document.getElementById('hsrSuccess');
+      success.classList.add('show');
+      document.getElementById('hsrRefCode').textContent = ref;
+
+      // Show toast
+      showToast('water', '🏥 Request Submitted!', `Your health request (${ref}) has been received.`);
+    }, 1200);
+  }
+
+  function resetHSR() {
+    // Reset state
+    Object.assign(HSR, { currentStep:1, service:'General Consultation', priority:'Low', name:'', studentId:'', email:'', phone:'', dob:'', symptoms:'', allergies:'', medications:'', date:'', slot:'', mode:'', clinician:'', notes:'', refCode:'' });
+
+    // Reset UI
+    document.getElementById('hsrSuccess').classList.remove('show');
+    document.getElementById('hsrMain').style.display = '';
+
+    // Reset step panels
+    for (let i = 1; i <= 4; i++) {
+      const p = document.getElementById('hsrPanel' + i);
+      p.classList.remove('active');
+      document.getElementById('stepDot' + i).classList.remove('active','completed');
+    }
+    document.getElementById('hsrPanel1').classList.add('active');
+    document.getElementById('stepDot1').classList.add('active');
+
+    // Reset form fields
+    ['hsrName','hsrStudentId','hsrEmail','hsrPhone','hsrDob','hsrSymptoms','hsrAllergies','hsrMedications','hsrDate','hsrNotes'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+    document.getElementById('hsrMode').value = '';
+
+    // Reset selections
+    document.querySelectorAll('.service-type-card').forEach((c,i) => { c.classList.toggle('selected', i===0); });
+    document.querySelectorAll('.priority-opt').forEach((p,i) => { p.classList.toggle('selected', i===0); });
+
+    // Reset summary
+    document.getElementById('sumService').textContent = 'General Consultation';
+    document.getElementById('sumPriority').textContent = 'Low';
+    document.getElementById('sumName').textContent = '—';
+    document.getElementById('sumDate').textContent = 'Not selected';
+    document.getElementById('sumSlot').textContent = 'Not selected';
+    document.getElementById('sumMode').textContent = 'Not selected';
+
+    // Pre-fill name/email from session
+    prefillHSRFromSession();
+    switchHSRTab('new');
+  }
+
+  function prefillHSRFromSession() {
+    if (!currentUser) return;
+    const nameEl = document.getElementById('hsrName');
+    const emailEl = document.getElementById('hsrEmail');
+    const phoneEl = document.getElementById('hsrPhone');
+    if (nameEl && currentUser.name) { nameEl.value = currentUser.name; HSR.name = currentUser.name; document.getElementById('sumName').textContent = currentUser.name; }
+    if (emailEl && currentUser.email) { emailEl.value = currentUser.email; HSR.email = currentUser.email; }
+    if (phoneEl && currentUser.phone) { phoneEl.value = currentUser.phone; }
+  }
+
+  function switchHSRTab(tab) {
+    const isNew = tab === 'new';
+    document.getElementById('tabNewReq').classList.toggle('active', isNew);
+    document.getElementById('tabHistory').classList.toggle('active', !isNew);
+    document.getElementById('hsrFormSection').style.display = isNew ? '' : 'none';
+    document.getElementById('hsrHistorySection').style.display = isNew ? 'none' : '';
+    if (!isNew) renderHSRHistory();
+  }
+
+  function showHistoryTab() {
+    document.getElementById('hsrSuccess').classList.remove('show');
+    document.getElementById('hsrMain').style.display = '';
+    navigate('healthrequest', null);
+    switchHSRTab('history');
+  }
+
+  function renderHSRHistory() {
+    const body = document.getElementById('hsrHistoryBody');
+    try {
+      const requests = JSON.parse(localStorage.getItem('alu_health_requests') || '[]');
+      if (!requests.length) {
+        body.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;text-align:center;padding:2rem 0">No requests yet. Submit your first health service request.</p>';
+        return;
+      }
+      // Show most recent first
+      const sorted = [...requests].reverse();
+      body.innerHTML = `
+        <table class="request-history-table">
+          <thead>
+            <tr>
+              <th>Ref</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Slot</th>
+              <th>Mode</th>
+              <th>Priority</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sorted.map(r => `
+              <tr>
+                <td style="font-family:monospace;color:var(--accent2);font-size:0.78rem">${r.ref}</td>
+                <td>${r.service}</td>
+                <td>${formatDate(r.date)}</td>
+                <td>${r.slot}</td>
+                <td>${r.mode}</td>
+                <td><span style="color:${r.priority==='High — Urgent'?'var(--danger)':r.priority==='Medium'?'var(--accent)':'var(--sports)'};font-weight:600">${r.priority}</span></td>
+                <td><span class="req-status req-status-${r.status.toLowerCase()}">${r.status}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    } catch(e) {
+      body.innerHTML = '<p style="color:var(--muted);font-size:0.85rem">Could not load requests.</p>';
+    }
+  }
+
+  // Helpers
+  function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+  function showErr(id) { const el = document.getElementById(id); if (el) el.classList.add('show'); }
+  function hideErr(id) { const el = document.getElementById(id); if (el) el.classList.remove('show'); }
+
+  // Auto-hide field errors on input
+  ['hsrName','hsrStudentId','hsrEmail','hsrSymptoms'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener('input', () => hideErr('err' + id.replace('hsr','')));
+  });
+
+  // Init: pre-fill from session when navigating to health request
+  const _origNavigate = navigate;
+  navigate = function(page, el) {
+    _origNavigate(page, el);
+    if (page === 'healthrequest') {
+      prefillHSRFromSession();
+      renderSlotGrid();
+    }
+  };
+</script>
+</body>
+</html>
