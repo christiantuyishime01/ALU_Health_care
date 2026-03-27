@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALU Healthcare — Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1f2d45;
+    --accent: #f97316;
+    --accent2: #06b6d4;
+    --accent3: #a855f7;
+    --water: #38bdf8;
+    --sports: #4ade80;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --danger: #f43f5e;
+    --success: #22c55e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* === ANIMATED BACKGROUND === */
+  .bg-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: orb-drift 12s ease-in-out infinite;
+  }
+
+  .bg-orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(249,115,22,0.12), transparent 70%);
+    top: -150px; left: -150px;
+    animation-delay: 0s;
+  }
+
+  .bg-orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(6,182,212,0.1), transparent 70%);
+    bottom: -100px; right: -100px;
+    animation-delay: -4s;
+  }
+
+  .bg-orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(168,85,247,0.08), transparent 70%);
+    top: 40%; left: 50%;
+    transform: translate(-50%,-50%);
+    animation-delay: -8s;
+  }
+
+  @keyframes orb-drift {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-15px, 25px) scale(0.97); }
+  }
+
+  /* Grid pattern overlay */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(31,45,69,0.3) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(31,45,69,0.3) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* === SPLIT LAYOUT === */
+  .login-wrapper {
+    display: flex;
+    width: 900px;
+    max-width: 95vw;
+    min-height: 580px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+    position: relative;
+    z-index: 10;
+    animation: wrapper-in 0.6s cubic-bezier(0.34, 1.2, 0.64, 1) both;
+  }
+
+  @keyframes wrapper-in {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* === LEFT PANEL === */
+  .left-panel {
+    width: 42%;
+    background: linear-gradient(160deg, #0f172a 0%, #0c1524 60%, #0a1020 100%);
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+  }
+
+  .left-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 70%, rgba(249,115,22,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .brand-badge {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    font-weight: 800;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    box-shadow: 0 4px 20px rgba(249,115,22,0.4);
+  }
+
+  .brand-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.3rem;
+    letter-spacing: -0.5px;
+  }
+
+  .brand-name span { color: var(--accent); }
+
+  .left-content { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 2rem 0; }
+
+  .left-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+
+  .left-headline span { color: var(--accent); }
+
+  .left-desc {
+    font-size: 0.88rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .feature-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.83rem;
+    color: #94a3b8;
+  }
+
+  .feature-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .feat-water { background: var(--water); box-shadow: 0 0 6px var(--water); }
+  .feat-sports { background: var(--sports); box-shadow: 0 0 6px var(--sports); }
+  .feat-accent { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .feat-purple { background: var(--accent3); box-shadow: 0 0 6px var(--accent3); }
+
+  .left-footer {
+    font-size: 0.72rem;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  /* === RIGHT PANEL (FORM) === */
+  .right-panel {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .form-header { margin-bottom: 2rem; }
+
+  .form-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+  }
+
+  .form-subtitle { font-size: 0.85rem; color: var(--muted); }
+
+  /* TABS */
+  .auth-tabs {
+    display: flex;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 1.8rem;
+    gap: 4px;
+  }
+
+  .auth-tab {
+    flex: 1;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 7px;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .auth-tab.active {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* FORM FIELDS */
+  .form-group { margin-bottom: 1.2rem; }
+
+  .form-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: #94a3b8;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .form-input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(249,115,22,0.12);
+  }
+
+  .form-input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(244,63,94,0.12);
+  }
+
+  .form-input.success {
+    border-color: var(--success);
+  }
+
+  .input-wrapper { position: relative; }
+
+  .input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 1rem;
+    user-select: none;
+    transition: color 0.2s;
+  }
+
+  .input-icon:hover { color: var(--text); }
+
+  /* ROLE SELECT */
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 1.2rem;
+  }
+
+  .role-option {
+    padding: 10px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  .role-option .role-emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+
+  .role-option.selected {
+    border-color: var(--accent);
+    background: rgba(249,115,22,0.1);
+    color: var(--text);
+  }
+
+  .role-option:hover:not(.selected) {
+    border-color: #334155;
+    background: rgba(255,255,255,0.03);
+  }
+
+  /* ERROR / SUCCESS MESSAGES */
+  .form-alert {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    margin-bottom: 1rem;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    animation: alert-in 0.3s ease;
+  }
+
+  @keyframes alert-in {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-alert.show { display: flex; }
+
+  .alert-error {
+    background: rgba(244,63,94,0.12);
+    border: 1px solid rgba(244,63,94,0.3);
+    color: #fda4af;
+  }
+
+  .alert-success {
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #86efac;
+  }
+
+  /* SUBMIT BUTTON */
+  .btn-submit {
+    width: 100%;
+    padding: 13px;
+    background: linear-gradient(135deg, var(--accent), #fb923c);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0.4rem;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(249,115,22,0.4);
+  }
+
+  .btn-submit:active { transform: translateY(0); }
+
+  .btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .btn-submit .btn-loader {
+    display: none;
+    width: 18px; height: 18px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin: 0 auto;
+  }
+
+  .btn-submit.loading .btn-text { display: none; }
+  .btn-submit.loading .btn-loader { display: block; }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 1.2rem 0;
+    color: var(--muted);
+    font-size: 0.75rem;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* DEMO ACCOUNTS */
+  .demo-accounts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .demo-btn {
+    padding: 8px 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .demo-btn:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    background: rgba(6,182,212,0.06);
+  }
+
+  .demo-avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* FORGOT LINK */
+  .form-extras {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .remember-check {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    color: #94a3b8;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .remember-check input { display: none; }
+
+  .check-box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    font-size: 0.65rem;
+  }
+
+  .remember-check input:checked + .check-box {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .forgot-link {
+    color: var(--accent2);
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: opacity 0.2s;
+  }
+
+  .forgot-link:hover { opacity: 0.8; text-decoration: underline; }
+
+  /* FORM SECTION TOGGLE */
+  .form-section { display: none; }
+  .form-section.active { display: block; }
+
+  /* INLINE ROW */
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* PASSWORD STRENGTH */
+  .pw-strength {
+    margin-top: 6px;
+    display: none;
+  }
+
+  .pw-strength.show { display: block; }
+
+  .pw-bars {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 4px;
+  }
+
+  .pw-bar {
+    height: 3px;
+    flex: 1;
+    border-radius: 99px;
+    background: var(--border);
+    transition: background 0.3s;
+  }
+
+  .pw-bar.filled-weak { background: var(--danger); }
+  .pw-bar.filled-medium { background: var(--accent); }
+  .pw-bar.filled-strong { background: var(--success); }
+
+  .pw-label { font-size: 0.7rem; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
+
+<div class="login-wrapper">
+
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-badge">ALU</div>
+      <div class="brand-name">ALU <span>Healthcare</span></div>
+    </div>
+
+    <div class="left-content">
+      <div class="left-headline">Your Campus<br>Health <span>Hub</span></div>
+      <p class="left-desc">Track your wellness, stay on top of hydration goals, manage sports activities, and keep your academic life in sync — all in one place.</p>
+
+      <div class="feature-list">
+        <div class="feature-item">
+          <div class="feature-dot feat-water"></div>
+          Hydration tracking &amp; reminders
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot feat-sports"></div>
+          Daily sports &amp; activity scheduler
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot feat-accent"></div>
+          Academic assignments &amp; grades
+        </div>
+        <div class="feature-item">
+          <div class="feature-dot feat-purple"></div>
+          Health analytics &amp; weekly summaries
+        </div>
+      </div>
+    </div>
+
+    <div class="left-footer">
+      © 2026 African Leadership University · Healthcare Division
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="form-header">
+      <div class="form-title">Welcome back 👋</div>
+      <div class="form-subtitle">Sign in to your ALU Healthcare account</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tab-login" onclick="switchTab('login')">Sign In</div>
+      <div class="auth-tab" id="tab-register" onclick="switchTab('register')">Create Account</div>
+    </div>
+
+    <!-- ALERT -->
+    <div class="form-alert alert-error" id="alertError">
+      <span>⚠️</span>
+      <span id="alertErrorMsg">Invalid credentials. Please try again.</span>
+    </div>
+    <div class="form-alert alert-success" id="alertSuccess">
+      <span>✅</span>
+      <span id="alertSuccessMsg">Account created! Signing you in…</span>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="form-section active" id="loginForm">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" id="loginEmail" placeholder="your@alu.edu" autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" id="loginPassword" placeholder="Enter your password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()" />
+          <span class="input-icon" onclick="togglePw('loginPassword', this)">👁</span>
+        </div>
+      </div>
+
+      <div class="form-extras">
+        <label class="remember-check">
+          <input type="checkbox" id="rememberMe" />
+          <div class="check-box" onclick="toggleRemember()">✓</div>
+          Remember me
+        </label>
+        <a class="forgot-link" onclick="showForgot()">Forgot password?</a>
+      </div>
+
+      <button class="btn-submit" id="loginBtn" onclick="doLogin()">
+        <span class="btn-text">Sign In</span>
+        <div class="btn-loader"></div>
+      </button>
+
+      <div class="divider">or try a demo account</div>
+
+      <div class="demo-accounts">
+        <button class="demo-btn" onclick="fillDemo('student@alu.edu','demo1234')">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,#a855f7,#06b6d4)">AK</div>
+          <div><div style="font-weight:600;color:var(--text)">Amara K.</div><div>Student</div></div>
+        </button>
+        <button class="demo-btn" onclick="fillDemo('trainer@alu.edu','demo1234')">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,#f97316,#fb923c)">JM</div>
+          <div><div style="font-weight:600;color:var(--text)">James M.</div><div>Trainer</div></div>
+        </button>
+        <button class="demo-btn" onclick="fillDemo('health@alu.edu','demo1234')">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,#38bdf8,#4ade80)">DR</div>
+          <div><div style="font-weight:600;color:var(--text)">Dr. Reeves</div><div>Clinician</div></div>
+        </button>
+        <button class="demo-btn" onclick="fillDemo('admin@alu.edu','demo1234')">
+          <div class="demo-avatar" style="background:linear-gradient(135deg,#f43f5e,#a855f7)">SA</div>
+          <div><div style="font-weight:600;color:var(--text)">Admin</div><div>Administrator</div></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="form-section" id="registerForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input type="text" class="form-input" id="regFirst" placeholder="First name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input type="text" class="form-input" id="regLast" placeholder="Last name" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" id="regEmail" placeholder="your@alu.edu" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <div class="role-grid" id="roleGrid">
+          <div class="role-option selected" data-role="student" onclick="selectRole(this)">
+            <span class="role-emoji">🎓</span>Student
+          </div>
+          <div class="role-option" data-role="trainer" onclick="selectRole(this)">
+            <span class="role-emoji">🏃</span>Trainer
+          </div>
+          <div class="role-option" data-role="clinician" onclick="selectRole(this)">
+            <span class="role-emoji">🩺</span>Clinician
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="input-wrapper">
+          <input type="password" class="form-input" id="regPassword" placeholder="Create a password" oninput="checkPwStrength(this.value)" onkeydown="if(event.key==='Enter')doRegister()" />
+          <span class="input-icon" onclick="togglePw('regPassword', this)">👁</span>
+        </div>
+        <div class="pw-strength" id="pwStrength">
+          <div class="pw-bars">
+            <div class="pw-bar" id="pwBar1"></div>
+            <div class="pw-bar" id="pwBar2"></div>
+            <div class="pw-bar" id="pwBar3"></div>
+            <div class="pw-bar" id="pwBar4"></div>
+          </div>
+          <div class="pw-label" id="pwLabel">Too short</div>
+        </div>
+      </div>
+
+      <button class="btn-submit" id="registerBtn" onclick="doRegister()">
+        <span class="btn-text">Create Account</span>
+        <div class="btn-loader"></div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  ALU Healthcare — localStorage-Backed User Database
+//  All registered users are saved permanently in the browser.
+// ============================================================
+
+const DEMO_USERS = [
+  { id: 1, firstName: 'Amara', lastName: 'Kamara', email: 'student@alu.edu', password: 'demo1234', role: 'student', avatar: 'AK', avatarGradient: 'linear-gradient(135deg,#a855f7,#06b6d4)', joinedAt: '2024-09-01', phone: '+250 788 100 001', bio: 'Computer Science student passionate about health tech.', waterStreak: 3, sportsStreak: 2 },
+  { id: 2, firstName: 'James', lastName: 'Mwangi', email: 'trainer@alu.edu', password: 'demo1234', role: 'trainer', avatar: 'JM', avatarGradient: 'linear-gradient(135deg,#f97316,#fb923c)', joinedAt: '2023-02-15', phone: '+250 788 100 002', bio: 'Certified fitness trainer and wellness coach at ALU.', waterStreak: 7, sportsStreak: 14 },
+  { id: 3, firstName: 'Sarah', lastName: 'Reeves', email: 'health@alu.edu', password: 'demo1234', role: 'clinician', avatar: 'DR', avatarGradient: 'linear-gradient(135deg,#38bdf8,#4ade80)', joinedAt: '2022-08-20', phone: '+250 788 100 003', bio: 'Campus clinician specialising in student wellbeing.', waterStreak: 5, sportsStreak: 4 },
+  { id: 4, firstName: 'System', lastName: 'Admin', email: 'admin@alu.edu', password: 'demo1234', role: 'admin', avatar: 'SA', avatarGradient: 'linear-gradient(135deg,#f43f5e,#a855f7)', joinedAt: '2021-01-01', phone: '+250 788 100 000', bio: 'Platform administrator for ALU Healthcare.', waterStreak: 0, sportsStreak: 0 }
+];
+
+const DB = {
+  // Load all users: demo defaults + any registered users from localStorage
+  getAll() {
+    try {
+      const stored = JSON.parse(localStorage.getItem('alu_users') || '[]');
+      // Merge: stored users override demo users if same email
+      const storedEmails = stored.map(u => u.email.toLowerCase());
+      const demos = DEMO_USERS.filter(u => !storedEmails.includes(u.email.toLowerCase()));
+      return [...demos, ...stored];
+    } catch { return DEMO_USERS; }
+  },
+
+  // Save a new user to localStorage
+  saveUser(user) {
+    try {
+      const stored = JSON.parse(localStorage.getItem('alu_users') || '[]');
+      stored.push(user);
+      localStorage.setItem('alu_users', JSON.stringify(stored));
+    } catch(e) { console.error('DB save failed', e); }
+  },
+
+  // Update an existing user in localStorage
+  updateUser(updatedUser) {
+    try {
+      const stored = JSON.parse(localStorage.getItem('alu_users') || '[]');
+      const idx = stored.findIndex(u => u.id === updatedUser.id);
+      if (idx !== -1) {
+        stored[idx] = updatedUser;
+        localStorage.setItem('alu_users', JSON.stringify(stored));
+      }
+    } catch(e) { console.error('DB update failed', e); }
+  },
+
+  findByEmail(email) {
+    return this.getAll().find(u => u.email.toLowerCase() === email.toLowerCase());
+  },
+
+  authenticate(email, password) {
+    const user = this.findByEmail(email);
+    if (!user) return { ok: false, error: 'No account found with that email.' };
+    if (user.password !== password) return { ok: false, error: 'Incorrect password. Please try again.' };
+    return { ok: true, user };
+  },
+
+  register(firstName, lastName, email, password, role) {
+    if (this.findByEmail(email)) return { ok: false, error: 'An account with this email already exists.' };
+    if (password.length < 6) return { ok: false, error: 'Password must be at least 6 characters.' };
+    const initials = (firstName[0] + lastName[0]).toUpperCase();
+    const gradients = [
+      'linear-gradient(135deg,#a855f7,#06b6d4)',
+      'linear-gradient(135deg,#f97316,#fb923c)',
+      'linear-gradient(135deg,#38bdf8,#4ade80)',
+      'linear-gradient(135deg,#f43f5e,#a855f7)',
+      'linear-gradient(135deg,#06b6d4,#4ade80)',
+      'linear-gradient(135deg,#f97316,#a855f7)',
+    ];
+    const allUsers = this.getAll();
+    const newUser = {
+      id: Date.now(),
+      firstName, lastName, email, password, role,
+      avatar: initials,
+      avatarGradient: gradients[allUsers.length % gradients.length],
+      joinedAt: new Date().toISOString().split('T')[0],
+      phone: '',
+      bio: '',
+      waterStreak: 0,
+      sportsStreak: 0
+    };
+    this.saveUser(newUser);
+    return { ok: true, user: newUser };
+  }
+};
+
+// Session: store in sessionStorage (clears on tab close)
+const SESSION = {
+  set(user) {
+    // Store full user object (minus password) in session
+    const session = {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      name: user.firstName + ' ' + user.lastName,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      avatar: user.avatar,
+      avatarGradient: user.avatarGradient,
+      joinedAt: user.joinedAt,
+      phone: user.phone || '',
+      bio: user.bio || '',
+      waterStreak: user.waterStreak || 0,
+      sportsStreak: user.sportsStreak || 0
+    };
+    sessionStorage.setItem('alu_session', JSON.stringify(session));
+  },
+  get() {
+    try { return JSON.parse(sessionStorage.getItem('alu_session')); } catch { return null; }
+  },
+  clear() {
+    sessionStorage.removeItem('alu_session');
+  }
+};
+
+// If already logged in, redirect
+if (SESSION.get()) {
+  window.location.href = 'index.html';
+}
+
+// ============================================================
+//  UI Logic
+// ============================================================
+
+let selectedRole = 'student';
+
+function switchTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+  document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+  document.getElementById('registerForm').classList.toggle('active', tab === 'register');
+
+  // Update header text
+  document.querySelector('.form-title').textContent = tab === 'login' ? 'Welcome back 👋' : 'Join ALU Health 🌿';
+  document.querySelector('.form-subtitle').textContent = tab === 'login'
+    ? 'Sign in to your ALU Healthcare account'
+    : 'Create your free account in seconds';
+
+  hideAlerts();
+}
+
+function hideAlerts() {
+  document.getElementById('alertError').classList.remove('show');
+  document.getElementById('alertSuccess').classList.remove('show');
+}
+
+function showError(msg) {
+  document.getElementById('alertErrorMsg').textContent = msg;
+  document.getElementById('alertError').classList.add('show');
+  document.getElementById('alertSuccess').classList.remove('show');
+}
+
+function showSuccess(msg) {
+  document.getElementById('alertSuccessMsg').textContent = msg;
+  document.getElementById('alertSuccess').classList.add('show');
+  document.getElementById('alertError').classList.remove('show');
+}
+
+function setLoading(btnId, loading) {
+  const btn = document.getElementById(btnId);
+  btn.classList.toggle('loading', loading);
+  btn.disabled = loading;
+}
+
+function doLogin() {
+  hideAlerts();
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  if (!email || !password) {
+    showError('Please fill in all fields.');
+    return;
+  }
+
+  setLoading('loginBtn', true);
+
+  // Simulate async auth delay
+  setTimeout(() => {
+    const result = DB.authenticate(email, password);
+
+    if (!result.ok) {
+      showError(result.error);
+      setLoading('loginBtn', false);
+      document.getElementById('loginPassword').classList.add('error');
+      setTimeout(() => document.getElementById('loginPassword').classList.remove('error'), 2000);
+      return;
+    }
+
+    // Save session
+    SESSION.set(result.user);
+    showSuccess(`Welcome back, ${result.user.firstName}! Loading your dashboard…`);
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1200);
+  }, 800);
+}
+
+function doRegister() {
+  hideAlerts();
+  const firstName = document.getElementById('regFirst').value.trim();
+  const lastName = document.getElementById('regLast').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const password = document.getElementById('regPassword').value;
+
+  if (!firstName || !lastName || !email || !password) {
+    showError('Please fill in all required fields.');
+    return;
+  }
+
+  if (!email.includes('@')) {
+    showError('Please enter a valid email address.');
+    return;
+  }
+
+  setLoading('registerBtn', true);
+
+  setTimeout(() => {
+    const result = DB.register(firstName, lastName, email, password, selectedRole);
+
+    if (!result.ok) {
+      showError(result.error);
+      setLoading('registerBtn', false);
+      return;
+    }
+
+    SESSION.set(result.user);
+    showSuccess(`Account created! Welcome to ALU Healthcare, ${firstName}!`);
+
+    setTimeout(() => {
+      window.location.href = 'index.html';
+    }, 1200);
+  }, 800);
+}
+
+function fillDemo(email, password) {
+  document.getElementById('loginEmail').value = email;
+  document.getElementById('loginPassword').value = password;
+  document.getElementById('loginEmail').classList.add('success');
+  document.getElementById('loginPassword').classList.add('success');
+  setTimeout(() => {
+    document.getElementById('loginEmail').classList.remove('success');
+    document.getElementById('loginPassword').classList.remove('success');
+  }, 2000);
+}
+
+function selectRole(el) {
+  document.querySelectorAll('.role-option').forEach(r => r.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedRole = el.dataset.role;
+}
+
+function togglePw(id, icon) {
+  const input = document.getElementById(id);
+  if (input.type === 'password') {
+    input.type = 'text';
+    icon.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    icon.textContent = '👁';
+  }
+}
+
+function toggleRemember() {
+  const cb = document.getElementById('rememberMe');
+  cb.checked = !cb.checked;
+}
+
+function showForgot() {
+  showError('Password reset is not available in the demo. Try a demo account below.');
+}
+
+function checkPwStrength(val) {
+  const el = document.getElementById('pwStrength');
+  el.classList.toggle('show', val.length > 0);
+
+  const bars = [document.getElementById('pwBar1'), document.getElementById('pwBar2'),
+                document.getElementById('pwBar3'), document.getElementById('pwBar4')];
+  const label = document.getElementById('pwLabel');
+
+  let score = 0;
+  if (val.length >= 6) score++;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) && /[0-9]/.test(val)) score++;
+  if (/[^a-zA-Z0-9]/.test(val)) score++;
+
+  const cls = score <= 1 ? 'filled-weak' : score === 2 ? 'filled-medium' : 'filled-strong';
+  const labels = ['Too short', 'Weak', 'Fair', 'Good', 'Strong'];
+
+  bars.forEach((b, i) => {
+    b.className = 'pw-bar';
+    if (i < score) b.classList.add(cls);
+  });
+
+  label.textContent = labels[score] || 'Strong';
+  label.style.color = score <= 1 ? 'var(--danger)' : score === 2 ? 'var(--accent)' : 'var(--success)';
+}
+</script>
+</body>
+</html>
